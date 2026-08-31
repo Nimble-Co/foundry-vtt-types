@@ -4,6 +4,7 @@ import type TokenApplicationMixin from "./mixin.d.mts";
 import type FormDataExtended from "../../ux/form-data-extended.d.mts";
 
 import ApplicationV2 = foundry.applications.api.ApplicationV2;
+import DocumentSheetV2 = foundry.applications.api.DocumentSheetV2;
 
 declare module "#configuration" {
   namespace Hooks {
@@ -49,7 +50,7 @@ declare class TokenConfig<
     form: HTMLFormElement,
     formData: FormDataExtended,
     options?: unknown,
-  ): Promise<void>;
+  ): Promise<DocumentSheetV2.ProcessSubmitDataResult>;
 }
 
 declare namespace TokenConfig {

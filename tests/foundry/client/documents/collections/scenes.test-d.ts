@@ -50,10 +50,26 @@ describe("Scenes Tests", async () => {
     expectTypeOf(scenes.current).toEqualTypeOf<Scene.Stored | undefined>();
     expectTypeOf(scenes.viewed).toEqualTypeOf<Scene.Stored | undefined>();
 
-    expectTypeOf(scenes.preload("ID")).toEqualTypeOf<Promise<Array<foundry.audio.Sound | undefined>>>();
-    expectTypeOf(scenes.preload("ID", false)).toEqualTypeOf<Promise<Array<foundry.audio.Sound | undefined>>>();
-    expectTypeOf(scenes.preload("ID", undefined)).toEqualTypeOf<Promise<Array<foundry.audio.Sound | undefined>>>();
-    expectTypeOf(scenes.preload("ID", true)).toEqualTypeOf<Promise<io.Socket>>();
+    expectTypeOf(scenes.preload("ID")).toEqualTypeOf<Promise<Scenes.PreloadReturn>>();
+    expectTypeOf(scenes.preload("ID", {})).toEqualTypeOf<Promise<Scenes.PreloadReturn>>();
+    expectTypeOf(scenes.preload("ID", undefined)).toEqualTypeOf<Promise<Scenes.PreloadReturn>>();
+    expectTypeOf(scenes.preload("ID", { level: "levelId", broadcast: true })).toEqualTypeOf<
+      Promise<Scenes.PreloadReturn>
+    >();
+    expectTypeOf(scenes.preload("ID", { level: undefined, broadcast: undefined })).toEqualTypeOf<
+      Promise<Scenes.PreloadReturn>
+    >();
+    expectTypeOf<Scenes.PreloadReturn>().toEqualTypeOf<Array<foundry.audio.Sound | undefined> | undefined>();
+
+    // the legacy `push` boolean still resolves, through a deprecated overload
+    // eslint-disable-next-line @typescript-eslint/no-deprecated
+    expectTypeOf(scenes.preload("ID", true)).toEqualTypeOf<Promise<Scenes.PreloadReturn>>();
+
+    // @ts-expect-error `push` is not an option of the new options object
+    scenes.preload("ID", { push: true });
+
+    // @ts-expect-error `level` must be a string
+    scenes.preload("ID", { level: 3 });
 
     expectTypeOf(Scenes._activateSocketListeners(game.socket!)).toBeVoid();
   });

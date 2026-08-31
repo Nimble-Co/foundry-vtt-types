@@ -470,6 +470,20 @@ declare class Canvas extends _InternalCanvas {
   static getSceneManager(scene: Scene.Implementation): foundry.canvas.SceneManager.Any | null;
 
   /**
+   * Determine an initial level based on what tokens the user has visibility of.
+   * This choice may be delegated to a SceneManager, if present.
+   * @param scene   - The Scene that is about to be drawn next.
+   * @param manager - The SceneManager for this scene.
+   * @returns The Level ID.
+   * @internal
+   * @remarks This was `static #determineInitialLevel` before v14.367.
+   */
+  protected static _determineInitialLevel(
+    scene: Scene.Implementation,
+    manager: foundry.canvas.SceneManager.Any | null,
+  ): string;
+
+  /**
    * Get the value of a GL parameter
    * @param parameter - The GL parameter to retrieve
    * @returns The returned value type depends of the parameter to retrieve

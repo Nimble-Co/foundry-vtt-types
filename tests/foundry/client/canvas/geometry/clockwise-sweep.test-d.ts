@@ -228,6 +228,14 @@ expectTypeOf(myCSP["_determineSweepResult"](somePV, edgeSet, false)).toEqualType
 declare const collisionResult: edges.CollisionResult;
 expectTypeOf(myCSP["_switchEdge"](collisionResult, edgeSet)).toBeVoid();
 
+// v14.367: `#edgeTypes`, `#rayDistance2`, and `#addInternalEdgeCollisions` became protected.
+expectTypeOf(myCSP["_edgeTypes"]).toEqualTypeOf<ClockwiseSweepPolygon.EdgeTypesConfiguration | undefined>();
+expectTypeOf(myCSP["_rayDistance2"]).toEqualTypeOf<number | undefined>();
+expectTypeOf(myCSP["_addInternalEdgeCollisions"]([somePV], new Set<number>(), someRay, edgeSet)).toBeVoid();
+
+// @ts-expect-error `_addInternalEdgeCollisions` is protected.
+myCSP._addInternalEdgeCollisions([somePV], new Set<number>(), someRay, edgeSet);
+
 expectTypeOf(myCSP["_visualizeCollision"](someRay, [somePV, somePV])).toBeVoid();
 
 expectTypeOf(myCSP.addPoint({ x: 37, y: 42 })).toEqualTypeOf<typeof myCSP>();

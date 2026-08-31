@@ -1191,6 +1191,24 @@ declare namespace ActiveEffect {
   type ChangeTarget = Actor.Implementation | Item.Implementation | TokenDocument.Implementation;
 
   /**
+   * Options for {@linkcode ActiveEffect.shouldApplyChange | ActiveEffect#shouldApplyChange}.
+   */
+  interface ShouldApplyChangeOptions {
+    /** The application phase currently being evaluated. */
+    phase?: string | undefined;
+
+    /**
+     * Replacement data to be used as part of the change's application.
+     *
+     * @remarks Foundry documents this parameter as `{string}`, but the description says "Replacement data"
+     * and {@linkcode Actor.applyActiveEffects | Actor#applyActiveEffects} passes the return value of
+     * {@linkcode ActiveEffect.getReplacementData | ActiveEffect#getReplacementData}, which is an object.
+     * The `{string}` tag is a defect in the Foundry source.
+     */
+    replacementData?: AnyObject | undefined;
+  }
+
+  /**
    * Options for {@linkcode ActiveEffect.applyChange}.
    */
   interface ApplyChangeOptions {
@@ -1438,6 +1456,27 @@ declare class ActiveEffect<out SubType extends ActiveEffect.SubType = ActiveEffe
    * Returns "None" (localized) if it has no origin, and "Unknown" (localized) if the origin cannot be resolved.
    */
   get sourceName(): string;
+
+  /**
+   * Determine whether a change from this ActiveEffect should be applied during the current phase. Systems and
+   * modules may override this method to introduce additional conditions under which a change is applied.
+   * @param change  - The change being considered.
+   * @param options - Options which affect whether the change is applied.
+   * @returns Should the change be applied during this phase (or at all)?
+   *
+   * @remarks The default implementation returns `change.phase === options?.phase`.
+   */
+  shouldApplyChange(change: ActiveEffect.ChangeData, options?: ActiveEffect.ShouldApplyChangeOptions): boolean;
+
+  /**
+   * Acquire replacement data for use in the application of this effect's changes.
+   * @param baseData - Base data sourced from elsewhere (by default from
+   *                   {@linkcode Actor.getRollData | Actor#getRollData})
+   * @returns Data used to resolve `@` expressions in string {@linkcode ActiveEffect.ChangeData | change} values
+   *
+   * @remarks The default implementation returns `baseData` unchanged.
+   */
+  getReplacementData(baseData: AnyObject): AnyObject;
 
   /**
    * Apply this ActiveEffect to a target Document.

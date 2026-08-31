@@ -97,7 +97,7 @@ declare class AdventureImporterV2<
     form: HTMLFormElement,
     formData: FormDataExtended,
     options?: unknown,
-  ): Promise<void>;
+  ): Promise<DocumentSheetV2.ProcessSubmitDataResult>;
 }
 
 declare namespace AdventureImporterV2 {

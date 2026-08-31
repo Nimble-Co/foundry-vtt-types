@@ -35,6 +35,12 @@ type _TimeoutOptions = InexactPartial<{
    * @defaultValue `() => {}`
    */
   onTimeout: () => void;
+
+  /**
+   * Non-OK status codes to return rather than throw.
+   * @defaultValue `[]`
+   */
+  allowStatus: number[];
 }>;
 
 interface TimeoutOptions extends _TimeoutOptions {}

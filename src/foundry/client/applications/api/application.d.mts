@@ -808,6 +808,16 @@ declare class ApplicationV2<
   changeTab(tab: string, group: string, options?: ApplicationV2.ChangeTabOptions): void;
 
   /**
+   * Re-fit an application to its content following a change in its natural size.
+   * @param positionUpdate - Position data forwarded to `setPosition`
+   *                         (default: `{}`)
+   * @remarks Added in v14.365. It does nothing if the window is resizable, or if neither the configured
+   * width nor the configured height is `"auto"`.
+   */
+  // positionUpdate: not null (parameter default only)
+  protected _refit(positionUpdate?: DeepPartial<ApplicationV2.Position>): void;
+
+  /**
    * Programmatically submit an ApplicationV2 instance which implements a single top-level form.
    * @param submitOptions - Arbitrary options which are supported by and provided to the configured form submission handler.
    * @returns A promise that resolves to the returned result of the form submission handler, if any.

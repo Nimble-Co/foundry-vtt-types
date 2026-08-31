@@ -89,6 +89,12 @@ declare class PointEffectSource {
   protected _initializeSoftEdges(): void;
 
   /**
+   * Get the polygon backend that is used to create the shapes for this source.
+   * @remarks Returns `CONFIG.Canvas.polygonBackends[this.constructor.sourceType]`
+   */
+  protected _getPolygonBackend(): PointSourcePolygon.AnyConstructor;
+
+  /**
    * Configure the parameters of the polygon that is generated for this source.
    */
   protected _getPolygonConfiguration(): PointEffectSourceMixin.PolygonConfig;

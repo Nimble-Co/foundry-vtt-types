@@ -161,7 +161,7 @@ declare abstract class BaseToken extends Document<"Token", BaseToken.Schema, any
    * Migrations:
    * - `hexagonalShape` to `shape` (since v13, no specified end)
    */
-  static override migrateData(source: AnyMutableObject): AnyMutableObject;
+  static override migrateData(source: AnyMutableObject, options?: DataModel.MigrateDataOptions): AnyMutableObject;
 
   /**
    * @remarks

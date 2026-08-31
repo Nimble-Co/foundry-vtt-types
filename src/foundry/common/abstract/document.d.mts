@@ -2047,8 +2047,10 @@ declare namespace Document {
     pack?: string | undefined;
 
     /**
-     * Block the dispatch of preCreate hooks for this operation
+     * Skip dispatch of the `pre[Operation]` hooks for this operation
      * @defaultValue `false`
+     * @remarks This context covers create, update and delete, so the option skips whichever of
+     * `preCreate`, `preUpdate` or `preDelete` applies. Core corrected this description in v14.365.
      */
     noHook?: boolean | undefined;
 

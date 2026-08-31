@@ -15,8 +15,12 @@ declare class KeyboardManager {
 
   /**
    * Begin listening to keyboard events.
+   * @param document - The document to bind listeners to
+   *                   (default: `window.document`)
+   * @remarks The parameter was added in v14.365 so that a detached window can bind its own listeners.
    */
-  protected _activateListeners(): void;
+  // document: not null (parameter default only)
+  protected _activateListeners(document?: globalThis.Document): void;
 
   /**
    * The set of key codes which are currently depressed (down)

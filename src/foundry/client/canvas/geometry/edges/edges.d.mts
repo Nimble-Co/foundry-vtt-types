@@ -34,9 +34,16 @@ declare class CanvasEdges extends Map<string, Edge> {
   getEdges(rect: PIXI.Rectangle, options?: CanvasEdges.GetEdgesOptions): Set<Edge>;
 
   /**
-   * @deprecated "`CanvasEdges#inititalize` has been deprecated. Use `Scene#initializeEdges` instead." (since v14, until v16)
+   * Identify all edge intersections.
+   * @remarks Does nothing if the edges are not dirty.
    */
-  inititalize(): void;
+  identifyIntersections(): void;
+
+  /**
+   * @deprecated "`CanvasEdges#inititalize` has been deprecated. Use `Scene#initializeEdges` instead." (since v14, until v16)
+   * @remarks The method was named `inititalize` until v14.367. The typo remains in the deprecation message only.
+   */
+  initialize(): void;
 
   /**
    * @deprecated "`CanvasEdges#refresh` has been deprecated. `CanvasEdges#getEdges` computes edge intersections automatically if necessary." (since v14, until v16)

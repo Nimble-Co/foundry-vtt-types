@@ -9,7 +9,8 @@ export { default as PrimaryGraphics } from "./primary-graphics.mjs";
 export { default as PrimarySpriteMesh } from "./primary-sprite-mesh.mjs";
 
 export { default as PrimaryOccludableObjectMixin } from "./primary-occludable-object.mjs";
-export { default as PrimaryCanvasObjectMixin, CanvasTransformMixin } from "./primary-canvas-object.mjs";
+export { default as PrimaryCanvasObjectMixin } from "./primary-canvas-object.mjs";
+export { default as CanvasTransformMixin } from "./canvas-transform-mixin.mjs";
 
 // Deprecated Exports
 // eslint-disable-next-line @typescript-eslint/no-deprecated -- re-exporting the @deprecated (until v16) class, matching the v14 source barrel

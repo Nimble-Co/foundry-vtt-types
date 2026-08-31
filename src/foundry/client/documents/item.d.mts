@@ -1103,6 +1103,16 @@ declare class Item<out SubType extends Item.SubType = Item.SubType> extends Base
   constructor(data: Item.CreateData<SubType>, context?: Item.ConstructionContext);
 
   /**
+   * @remarks Applies configured compendium art to the source `img` (when the Item is in a pack and
+   * {@linkcode foundry.helpers.media.CompendiumArt | game.compendiumArt} is enabled), then calls the
+   * `applyCompendiumArt` hook. Added in v14.367.
+   */
+  protected override _initializeSource(
+    data: this | Item.CreateData<SubType>,
+    options?: Document.InitializeSourceOptions,
+  ): Item.Source;
+
+  /**
    * A convenience alias of Item#parent which is more semantically intuitive
    */
   get actor(): Actor.Implementation | null;

@@ -1,4 +1,4 @@
-import type { CanvasAnimation, ParticleGenerator } from "./_module.mjs";
+import type { CanvasAnimation, ChatBubbles, ParticleGenerator } from "./_module.mjs";
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
@@ -100,3 +100,5 @@ type ParticleMesh = ParticleGenerator.ParticleMesh;
 type ParticleGeneratorPolylineSegment = ParticleGenerator.PolylineSegment;
 
 type ParticleGeneratorLocalArea = ParticleGenerator.LocalArea;
+
+type ChatBubbleOptions = ChatBubbles.Options;

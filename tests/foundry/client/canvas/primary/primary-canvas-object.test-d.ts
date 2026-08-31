@@ -38,10 +38,22 @@ describe("PrimaryCanvasObjectMixin tests", () => {
     expectTypeOf(myPCO.zIndex).toBeNumber();
     myPCO.zIndex = 20; // Setter
 
+    // @ts-expect-error `elevation` is numeric.
+    myPCO.elevation = "20";
+
+    expectTypeOf(myPCO.inPrimary).toBeBoolean();
+    expectTypeOf(myPCO["_primaryIndex"]).toBeNumber();
+
+    // @ts-expect-error `_primaryIndex` is protected.
+    myPCO._primaryIndex;
+
     expectTypeOf(myPCO["_onAdded"](primaryCanvasGroup)).toBeVoid();
     expectTypeOf(myPCO["_onAdded"](primaryCanvasContainer)).toBeVoid();
+    expectTypeOf(myPCO["_onAddedPrimary"]()).toBeVoid();
     expectTypeOf(myPCO["_onRemoved"](primaryCanvasGroup)).toBeVoid();
     expectTypeOf(myPCO["_onRemoved"](primaryCanvasContainer)).toBeVoid();
+    expectTypeOf(myPCO["_onRemovedPrimary"]()).toBeVoid();
+    expectTypeOf(myPCO["_onElevationChange"]()).toBeVoid();
 
     expectTypeOf(myPCO.shouldRenderDepth).toBeBoolean();
 

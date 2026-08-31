@@ -1177,6 +1177,13 @@ declare namespace Actor {
      * @defaultValue `false`
      */
     linked: boolean;
+
+    /**
+     * Limit the results to tokens that exist in their parent scene, excluding ephemeral/unpersisted
+     * tokens. This will become the default in v15.
+     * @defaultValue `false`
+     */
+    concreteOnly: boolean;
   }>;
 
   interface GetDependentTokensOptions extends _GetDependentTokensOptions {}

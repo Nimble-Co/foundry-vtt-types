@@ -21,6 +21,14 @@ declare const someTex: PIXI.Texture;
 expectTypeOf(TextureLoader.loadSceneTextures(someScene, { expireCache: false, maxConcurrent: 4 })).toEqualTypeOf<
   Promise<void>
 >();
+
+declare const someLevel: Level.Implementation;
+
+// Since v14.367 a Level is accepted in place of a Scene.
+expectTypeOf(TextureLoader.loadSceneTextures(someLevel)).toEqualTypeOf<Promise<void>>();
+
+// @ts-expect-error `loadSceneTextures` takes a Scene or a Level, not an ID.
+TextureLoader.loadSceneTextures("XXXXXSomeIDXXXXX");
 expectTypeOf(TextureLoader.getTextureAlphaData(someTex, 0.8)).toEqualTypeOf<TextureLoader.TextureAlphaData | void>();
 // eslint-disable-next-line @typescript-eslint/no-deprecated -- `fetchResource` is `@deprecated since v14`; still exercised for surface coverage.
 expectTypeOf(TextureLoader.fetchResource("some/url.jpg", { bustCache: true })).toEqualTypeOf<Promise<Blob>>();

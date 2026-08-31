@@ -185,8 +185,9 @@ declare class ChatLog<
 
   /**
    * Post a single chat message to the log.
+   * @remarks Does nothing if the log is not rendered, or if the message is not visible to this user.
    */
-  postOne(message: ChatMessage.Implementation, options?: object): Promise<void>;
+  postOne(message: ChatMessage.Implementation, options?: ChatLog.PostOneOptions): Promise<void>;
 
   /**
    * Render a batch of additional messages, prepending them to the top of the log.
@@ -201,8 +202,9 @@ declare class ChatLog<
 
   /**
    * Update the displayed representation of a ChatMessage in the log.
+   * @remarks Deletes the message from the log instead if the message is no longer visible to this user.
    */
-  updateMessage(message: ChatMessage.Implementation, options?: object): Promise<void>;
+  updateMessage(message: ChatMessage.Implementation, options?: ChatLog.UpdateMessageOptions): Promise<void>;
 
   /**
    * Update the displayed timestamps for all rendered messages.
@@ -216,8 +218,12 @@ declare class ChatLog<
 
   /**
    * Toggle the display of chat notifications.
+   * @param options - The options which were passed to the render or close operation that triggered this
+   *                  method
+   *                  (default: `{}`)
+   * @remarks v14.365 widened this parameter. The options are forwarded to the `renderChatInput` hook.
    */
-  protected _toggleNotifications(options?: { closing?: boolean }): void;
+  protected _toggleNotifications(options?: ChatLog.ToggleNotificationsOptions): void;
 
   /**
    * Update the chat message entry mode (roll mode / whisper target).
@@ -234,6 +240,44 @@ declare namespace ChatLog {
     queue: string[];
     index: number;
     pending: string;
+  }
+
+  /** @remarks The `scroll` option was added in v14.365. */
+  interface PostOneOptions {
+    /**
+     * An existing message ID to prepend the posted message to. By default the new message is appended to the
+     * end of the log.
+     */
+    before?: string | undefined;
+
+    /**
+     * Trigger a notification which shows the log as having a new unread message.
+     * @defaultValue `false`
+     */
+    notify?: boolean | undefined;
+
+    /**
+     * Pass `true` to always scroll to the bottom, or `false` to suppress this. If you omit this option the
+     * log keeps its conditional scroll to the bottom: it scrolls only when the log is already at the bottom
+     * or when this user is the author.
+     */
+    scroll?: boolean | undefined;
+  }
+
+  interface UpdateMessageOptions {
+    /**
+     * Trigger a notification which shows the log as having a new unread message.
+     * @defaultValue `false`
+     */
+    notify?: boolean | undefined;
+  }
+
+  interface ToggleNotificationsOptions extends DeepPartial<ApplicationV2.RenderOptions & ApplicationV2.ClosingOptions> {
+    /**
+     * Whether this method has been triggered by the chat popout closing.
+     * @defaultValue `false`
+     */
+    closing?: boolean | undefined;
   }
 
   interface RenderContext extends HandlebarsApplicationMixin.RenderContext, AbstractSidebarTab.RenderContext {}

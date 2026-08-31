@@ -12,6 +12,13 @@ expectTypeOf(level.edges).toEqualTypeOf<CanvasEdges>();
 expectTypeOf(level.prepareBaseData()).toEqualTypeOf<void>();
 expectTypeOf(level.clampElevation(10)).toEqualTypeOf<number>();
 expectTypeOf(level.clampElevation(10, 2)).toEqualTypeOf<number>();
+expectTypeOf(level.updateRegionShapeConstraints()).toEqualTypeOf<void>();
+expectTypeOf(level.updateRegionShapeConstraints(undefined)).toEqualTypeOf<void>();
+expectTypeOf(level.updateRegionShapeConstraints(["light", "sound"])).toEqualTypeOf<void>();
+expectTypeOf(level.updateRegionShapeConstraints(new Set(["move"] as const))).toEqualTypeOf<void>();
+
+// @ts-expect-error `"invalid"` is not an edge restriction type
+level.updateRegionShapeConstraints(["invalid"]);
 
 // Initialized schema data
 expectTypeOf(level.name).toEqualTypeOf<string>();

@@ -279,12 +279,13 @@ declare namespace DatabaseBackend {
     broadcast?: boolean;
 
     /**
-     * Block the dispatch of hooks related to this operation
+     * Skip dispatch of the `pre[Operation]` hooks for this operation
      *
      * @remarks Behaves as if the default is `false`.
      *
-     * Despite the description, only prevents `pre[Operation][Document]` hooks from being called. Post-operation hooks (`createItem` etc)
-     * still fire.
+     * Only prevents `pre[Operation][Document]` hooks from being called. Post-operation hooks (`createItem` etc)
+     * still fire. Core corrected the description of this option in v14.365; the prior text said that it blocked
+     * every hook related to the operation, which was never true.
      */
     noHook?: boolean;
 

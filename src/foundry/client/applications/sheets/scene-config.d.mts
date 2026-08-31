@@ -79,7 +79,7 @@ declare class SceneConfig<
     form: HTMLFormElement,
     formData: FormDataExtended,
     options?: unknown,
-  ): Promise<void>;
+  ): Promise<DocumentSheetV2.ProcessSubmitDataResult>;
 
   protected override _onFirstRender(
     context: DeepPartial<RenderContext>,

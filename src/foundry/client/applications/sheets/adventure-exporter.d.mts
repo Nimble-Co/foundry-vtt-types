@@ -51,7 +51,7 @@ declare class AdventureExporter<
     form: HTMLFormElement,
     formData: foundry.applications.ux.FormDataExtended,
     options?: unknown,
-  ): Promise<void>;
+  ): Promise<DocumentSheetV2.ProcessSubmitDataResult>;
 
   protected override _onRender(context: DeepPartial<RenderContext>, options: DeepPartial<RenderOptions>): Promise<void>;
 

@@ -460,9 +460,31 @@ declare namespace ChatMessage {
        * @remarks If passed `true`, {@linkcode ChatMessage._onCreate | ChatMessage#_onCreate} will call
        * {@linkcode foundry.canvas.animation.ChatBubbles.say | ChatBubbles#say} with the created message.
        *
-       * This is automatically set `true` for `/ic` and `/emote` chat commands, which is the only use in core as of 13.351.
+       * Since v14.367 {@linkcode ChatMessage._preCreate | ChatMessage#_preCreate} sets this to
+       * `messageMode === "ic"` if it is not already set, and only when {@linkcode messageMode} is passed.
+       * Before that build the default came from the message style being `IC` or `EMOTE`.
        */
       chatBubble?: boolean;
+
+      /**
+       * @remarks Passed on by {@linkcode ChatMessage._onCreate | ChatMessage#_onCreate} to
+       * {@linkcode foundry.applications.sidebar.tabs.ChatLog.postOne | ChatLog#postOne}. If `true`, the chat log
+       * shows a notification for a new unread message.
+       *
+       * `ChatMessage#_onCreate` passes `options.notify ?? true`, so the effective default for a create operation
+       * is `true`, even though `ChatLog#postOne` itself defaults it to `false`.
+       */
+      notify?: boolean;
+
+      /**
+       * @remarks Passed on by {@linkcode ChatMessage._onCreate | ChatMessage#_onCreate} to
+       * {@linkcode foundry.applications.sidebar.tabs.ChatLog.postOne | ChatLog#postOne}.
+       *
+       * Pass `true` to always scroll the chat log to the bottom, or `false` to suppress the scroll. If you omit
+       * this option, the log keeps its conditional scroll: it scrolls only if it is already at the bottom or if
+       * the current User is the author of the message.
+       */
+      scroll?: boolean;
     }
 
     /**
@@ -582,7 +604,16 @@ declare namespace ChatMessage {
      * @remarks This interface was previously typed for passing to {@linkcode ChatMessage.update | ChatMessage#update}.
      * The new name for that interface is {@linkcode UpdateOneDocumentOperation}.
      */
-    interface UpdateOperation extends DatabaseBackend.UpdateOperation<ChatMessage.UpdateInput, ChatMessage.Parent> {}
+    interface UpdateOperation extends DatabaseBackend.UpdateOperation<ChatMessage.UpdateInput, ChatMessage.Parent> {
+      /**
+       * @remarks Passed on by {@linkcode ChatMessage._onUpdate | ChatMessage#_onUpdate} to
+       * {@linkcode foundry.applications.sidebar.tabs.ChatLog.updateMessage | ChatLog#updateMessage}. If `true`,
+       * the chat log shows a notification for the updated message.
+       *
+       * `ChatLog#updateMessage` defaults this to `false`, and `ChatMessage#_onUpdate` adds no default of its own.
+       */
+      notify?: boolean;
+    }
 
     /**
      * The interface for passing to {@linkcode ChatMessage.update | ChatMessage#update}.
@@ -1243,6 +1274,20 @@ declare class ChatMessage<out SubType extends ChatMessage.SubType = ChatMessage.
    * @param mode     - The message visibility mode to apply, otherwise apply the default mode stored in
    *                   client settings.
    * @returns Modified ChatMessage data with the message visibility mode applied
+   *
+   * @remarks Since v14.367 the mode is resolved before it is applied. A `mode` that is not a key of
+   * {@linkcode CONFIG.ChatMessage.modes} falls back to the `core.messageMode` client setting, and `"ic"`
+   * falls back to `"public"` when `chatData` has no speaker actor or token, or when `chatData` carries rolls.
+   *
+   * Foundry types both `chatData` and the return value as `Partial<ChatMessageData>`. This repository keeps
+   * {@linkcode ChatMessage.CreateData | CreateData}, because that is the shape callers such as
+   * {@linkcode foundry.dice.Roll.toMessage | Roll#toMessage} build and pass.
+   *
+   * @defaultValue
+   * ```typescript
+   * // mode
+   * game.settings.get("core", "messageMode")
+   * ```
    */
   static applyMode(chatData: ChatMessage.CreateData, mode?: ChatMessage.MessageMode): ChatMessage.CreateData;
 

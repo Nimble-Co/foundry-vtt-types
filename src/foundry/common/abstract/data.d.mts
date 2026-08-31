@@ -358,17 +358,20 @@ declare abstract class DataModel<
 
   /**
    * Migrate candidate source data for this DataModel which may require initial cleaning or transformations.
-   * @param source - The candidate source data from which the model will be constructed
+   * @param source  - The candidate source data from which the model will be constructed
+   * @param options - Additional options for how the field is cleaned
    * @returns Migrated source data, if necessary
    */
-  static migrateData(source: AnyMutableObject): AnyMutableObject;
+  static migrateData(source: AnyMutableObject, options?: DataModel.MigrateDataOptions): AnyMutableObject;
 
   /**
    * Wrap data migration in a try/catch which attempts it safely
-   * @param source - The candidate source data from which the model will be constructed
+   * @param source  - The candidate source data from which the model will be constructed
+   * @param options - Additional options for how the field is cleaned
    * @returns Migrated source data, if necessary
    */
-  static migrateDataSafe(source: AnyMutableObject): AnyMutableObject;
+  // options: not null (parameter default only)
+  static migrateDataSafe(source: AnyMutableObject, options?: DataModel.MigrateDataOptions): AnyMutableObject;
 
   /**
    * Take data which conforms to the current data schema and add backwards-compatible accessors to it in order to
@@ -589,6 +592,16 @@ declare namespace DataModel {
   }>;
 
   interface ShimDataOptions extends _ShimDataOptions {}
+
+  /**
+   * An interface for the options of {@link DataModel.migrateData | `DataModel.migrateData`} and
+   * {@link DataModel.migrateDataSafe | `DataModel.migrateDataSafe`}.
+   *
+   * @remarks Core types this parameter as `Readonly<DataModelCleaningOptions>`. `migrateData` is called
+   * from {@link DataModel.cleanData | `DataModel.cleanData`} and gets the same options object, so this
+   * interface reuses {@linkcode DataField.CleanOptions} instead of a second source of truth.
+   */
+  interface MigrateDataOptions extends DataField.CleanOptions {}
 
   /**
    * @deprecated Replaced by {@linkcode DataModel.CreateData}

@@ -45,6 +45,24 @@ declare class ClockwiseSweepPolygon extends PointSourcePolygon {
   rays: ClockwiseSweepPolygon.Ray[];
 
   /**
+   * The edge types.
+   * @remarks Only `undefined` before the first call to
+   * {@linkcode ClockwiseSweepPolygon.initialize | ClockwiseSweepPolygon#initialize}.
+   *
+   * This was `#edgeTypes` before v14.367.
+   */
+  protected _edgeTypes: ClockwiseSweepPolygon.EdgeTypesConfiguration | undefined;
+
+  /**
+   * The squared maximum distance of a ray that is needed for this Scene.
+   * @remarks Only `undefined` before the first call to
+   * {@linkcode ClockwiseSweepPolygon.initialize | ClockwiseSweepPolygon#initialize}.
+   *
+   * This was `#rayDistance2` before v14.367.
+   */
+  protected _rayDistance2: number | undefined;
+
+  /**
    * Is this polygon using inner bounds?
    */
   get useInnerBounds(): boolean;
@@ -151,6 +169,21 @@ declare class ClockwiseSweepPolygon extends PointSourcePolygon {
    * @param activeEdges - The set of currently active edges
    */
   protected _switchEdge(result: CollisionResult, activeEdges: Set<Edge>): void;
+
+  /**
+   * Identify the collision points between an emitted Ray and a set of active edges.
+   * @param vertices    - Active vertices
+   * @param keys        - Active vertex keys
+   * @param ray         - The candidate ray to test
+   * @param activeEdges - The set of edges to check for collisions against the ray
+   * @remarks This was `#addInternalEdgeCollisions` before v14.367.
+   */
+  protected _addInternalEdgeCollisions(
+    vertices: PolygonVertex[],
+    keys: Set<number>,
+    ray: ClockwiseSweepPolygon.Ray,
+    activeEdges: Set<Edge>,
+  ): void;
 
   /** @remarks Does not take the new-as-of-v13 `destination` param from {@linkcode PointSourcePolygon._testCollision | super} (yet?) */
   protected override _testCollision<Mode extends PointSourcePolygon.CollisionModes>(

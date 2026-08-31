@@ -247,9 +247,6 @@ declare namespace Level {
     fog: fields.SchemaField<{
       /** @defaultValue `null` */
       src: fields.FilePathField<{ required: true; categories: ["TEXTURE"]; initial: null; virtual: true }>;
-
-      /** @defaultValue `"#ffffff"` */
-      tint: fields.ColorField<{ required: true; nullable: false; initial: "#ffffff" }>;
     }>;
 
     /**
@@ -961,6 +958,20 @@ declare class Level extends BaseLevel.Internal.ClientDocument {
    * @returns The clamped elevation
    */
   clampElevation(elevation: number, depth?: number): number;
+
+  /**
+   * Update the shape constraints of all Regions in this Level the current User is designated for
+   * (for the given restriction types).
+   * @param types - The types to update. Default: all.
+   *
+   * @remarks Throws if this Level is not persisted.
+   * @defaultValue
+   * ```typescript
+   * // types
+   * CONST.EDGE_RESTRICTION_TYPES
+   * ```
+   */
+  updateRegionShapeConstraints(types?: Iterable<CONST.EDGE_RESTRICTION_TYPES>): void;
 
   /*
    * After this point these are not really overridden methods.

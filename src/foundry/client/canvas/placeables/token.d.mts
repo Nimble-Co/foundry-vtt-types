@@ -340,6 +340,11 @@ declare class Token extends PlaceableObject<TokenDocument.Implementation> {
    */
   get isVisible(): boolean;
 
+  /**
+   * Test if this Token should be culled.
+   */
+  protected _testCulled(): boolean;
+
   override get isInteractable(): boolean;
 
   /**
@@ -533,6 +538,15 @@ declare class Token extends PlaceableObject<TokenDocument.Implementation> {
    * Refresh the border.
    */
   protected _refreshBorder(): void;
+
+  /**
+   * Configure bespoke bar colors for a given bar. If this method is not implemented, the default colors from
+   * `CONFIG.Token.barConfig` will be used.
+   * @param index - The bar index.
+   * @param data  - Resource data for the base.
+   * @remarks Returns `CONFIG.Token.barConfig.bar1.colors` if `index` is `0`, else `CONFIG.Token.barConfig.bar2.colors`.
+   */
+  protected _getBarColors(index: number, data: NonNullable<TokenDocument.GetBarAttributeReturn>): Token.BarColors;
 
   /**
    * Get the hex color that should be used to render the Token border
@@ -782,6 +796,21 @@ declare class Token extends PlaceableObject<TokenDocument.Implementation> {
     waypoints: Token.ConstrainMovementPathWaypoint[],
     { preview, ignoreWalls, ignoreCost, history }?: Token.ConstrainMovementPathOptions,
   ): Token.ConstrainMovementPathReturn;
+
+  /**
+   * Get movement wall collision configuration that are passed to
+   * {@linkcode foundry.canvas.geometry.PointSourcePolygon.testCollision | PointSourcePolygon.testCollision}
+   * as part of {@linkcode Token.constrainMovementPath | Token#constrainMovementPath}.
+   * @param segment - The movement segment
+   * @param options - The constrain options. The `preview` option is always defined and true for GMs and when Token
+   *                  Vision is disabled.
+   * @privateRemarks Foundry writes the `segment` type as `Omit<TokenMovementSegmentData, "teleport"|"measure">`.
+   * `TokenMovementSegmentData` has no `measure` property, so only `teleport` is omitted here.
+   */
+  protected _getMovementCollisionTestConfiguration(
+    segment: Omit<TokenDocument.MovementSegmentData, "teleport">,
+    options: RequiredProps<Token.ConstrainMovementPathOptions, "preview">,
+  ): PointSourcePolygon.Config;
 
   /**
    * Find a movement path through the waypoints.
@@ -1170,6 +1199,14 @@ declare namespace Token {
       }>;
     }>;
   interface ReticuleOptions extends _ReticuleOptions {}
+
+  /**
+   * The return type of {@linkcode Token._getBarColors | Token#_getBarColors}.
+   */
+  interface BarColors {
+    empty: Color;
+    full: Color;
+  }
 
   /**
    * The return type of {@link Token.getRingColors | `Token#getRingColors`}. Core's implementation returns `{}`.

@@ -80,7 +80,7 @@ declare abstract class BaseScene extends Document<"Scene", BaseScene.Schema, any
    * - `darkness` to `environment.darknessLevel` (since v12, until 14 (probably))
    * - `flags.core.sourceId` to `_stats.compendiumSource` (since v12, no specified end)
    */
-  static override migrateData(source: AnyMutableObject): AnyMutableObject;
+  static override migrateData(source: AnyMutableObject, options?: DataModel.MigrateDataOptions): AnyMutableObject;
 
   /**
    * @remarks

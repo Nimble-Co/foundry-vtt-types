@@ -211,12 +211,14 @@ export type SelectOptionsValue = string | number | Iterable<string | number>;
 interface _MultiSelectInputConfig {
   /**
    * Customize the type of select that is created
-   * @remarks This is only checked for `=== "checkboxes"`. If true, a {@linkcode HTMLMultiCheckboxElement} is returned; all other values
-   * lead to a {@linkcode HTMLMultiSelectElement}.
+   * @remarks `"autocomplete"` returns a {@linkcode HTMLAutocompleteTagsElement} and `"checkboxes"` returns a
+   * {@linkcode HTMLMultiCheckboxElement}. All other values lead to a {@linkcode HTMLMultiSelectElement}.
+   *
+   * `"autocomplete"` was added in v14.364.
    *
    * @privateRemarks Foundry puts this in {@linkcode _SelectInputConfig}, but it's only used by {@linkcode createMultiSelectInput}
    */
-  type: "single" | "multi" | "checkboxes";
+  type: "single" | "multi" | "checkboxes" | "autocomplete";
 }
 
 /** @remarks See {@linkcode SelectOptionsValue} */

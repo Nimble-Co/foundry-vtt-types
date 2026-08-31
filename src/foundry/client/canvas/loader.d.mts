@@ -32,12 +32,14 @@ declare class TextureLoader {
   static getTextureAlphaData(texture: PIXI.Texture, resolution?: number): TextureLoader.TextureAlphaData | void;
 
   /**
-   * Load all the textures which are required for a particular Scene
-   * @param scene   - The Scene to load
-   * @param options - Additional options that configure texture loading (default: `{}`)
+   * Load all the textures which are required for a particular Scene or Level.
+   * @param sceneOrLevel - The Scene or Level to load
+   * @param options      - Additional options that configure texture loading (default: `{}`)
+   * @remarks Since v14.367 a {@linkcode Level} is accepted in place of a {@linkcode Scene}. The Scene or Level does
+   * not have to be viewed.
    */
   static loadSceneTextures(
-    scene: Scene.Implementation,
+    sceneOrLevel: Scene.Implementation | Level.Implementation,
     options?: TextureLoader.LoadSceneTexturesOptions,
   ): Promise<void>;
 

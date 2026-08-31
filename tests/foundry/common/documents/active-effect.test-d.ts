@@ -1,5 +1,5 @@
 import { expectTypeOf } from "vitest";
-import type { EmptyObject, InterfaceToObject } from "fvtt-types/utils";
+import type { AnyMutableObject, EmptyObject, InterfaceToObject } from "fvtt-types/utils";
 import BaseActiveEffect = foundry.documents.BaseActiveEffect;
 import Document = foundry.abstract.Document;
 import fields = foundry.data.fields;
@@ -190,7 +190,8 @@ expectTypeOf(fullTestAE.testUserPermission(someUser, "OBSERVER", {})).toBeBoolea
 expectTypeOf(fullTestAE.testUserPermission(someUser, "OBSERVER", { exact: true })).toBeBoolean();
 expectTypeOf(fullTestAE.testUserPermission(someUser, "OBSERVER", { exact: undefined })).toBeBoolean();
 
-// migrateData and shimData overridden with no signature changes
+// `migrateData` gained an `options` parameter in v14.367; `shimData` is unchanged.
+expectTypeOf(foundry.documents.BaseActiveEffect.migrateData({}, { partial: true })).toEqualTypeOf<AnyMutableObject>();
 
 // `icon` (deprecated alias for `img`) was removed in v14
 

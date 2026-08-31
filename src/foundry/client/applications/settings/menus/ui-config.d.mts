@@ -64,6 +64,10 @@ declare namespace UIConfig {
     uiScale: number;
     fontScale: number;
     colorScheme: { applications: "" | "dark" | "light"; interface: "" | "dark" | "light" };
+
+    /** @remarks Added in v14.365. It gives the chat log a background. */
+    chatBackground: boolean;
+
     chatNotifications: "cards" | "pip";
     fade: { opacity: number; speed: number };
   }

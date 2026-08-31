@@ -1,5 +1,10 @@
 import type VFXPath from "./vfx-path.d.mts";
 
+export interface VFXComponentData {
+  /** The VFX component type. */
+  type: string;
+}
+
 export interface VFXComponentAnimation {
   setup?: (state: object, params: object) => void;
   animate: (t: number, state: object, params: object) => void;

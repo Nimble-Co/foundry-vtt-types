@@ -58,15 +58,17 @@ declare class SceneManager {
   /**
    * Configure which level of the Scene should be initially viewed for a managed Scene.
    * This initial level could be user-specific.
+   * This method may be called when the Scene is not viewed.
    * @remarks Returns a `Level` document ID. The Scene Levels subsystem (Phase 7) gives this semantic meaning.
    */
   protected _determineInitialLevel(): string | void;
 
   /**
    * Configure which levels of the Scene are available to the current user.
-   * @param defaultLevels - The levels that are available to the current user by default.
+   * This method may be called when the Scene is not viewed.
+   * @param defaultLevels - The levels that are available to the current user by default in ascending order.
    * @returns Return a Set of Level documents to override the default token-ownership logic, or return
-   *          nothing to fall back to the default behavior.
+   *          nothing to fall back to the default behavior. The returned Levels must be sorted in ascending order.
    */
   protected _getAvailableLevels(defaultLevels: Set<Level.Implementation>): Set<Level.Implementation> | void;
 
@@ -74,6 +76,20 @@ declare class SceneManager {
    * Additional behaviors to perform when the Canvas is first initialized for the Scene.
    */
   protected _onInit(): Promise<void>;
+
+  /**
+   * Load additional texture resources for the Scene/Level.
+   * This method may be called when the Scene is not viewed.
+   * @param textures          - Destination record to register textures into.
+   * @param additionalSources - Additional sources to load.
+   * @param level             - The Level to load textures for.
+   * @remarks A no-op in `SceneManager`. Subclasses add entries to `textures` and to `additionalSources`.
+   */
+  protected _loadTextures(
+    textures: Record<string, string | PIXI.Texture | PIXI.Spritesheet>,
+    additionalSources: string[],
+    level: Level.Implementation,
+  ): void;
 
   /**
    * Additional behaviors to perform after core groups and layers are drawn to the canvas.

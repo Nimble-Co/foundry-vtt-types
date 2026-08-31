@@ -342,9 +342,9 @@ declare namespace DialogV2 {
     type?: HTMLButtonElement["type"] | undefined;
 
     /**
-     * Whether this button represents the default action to take if the user
-     * submits the form without pressing a button, i.e. with an Enter
-     * keypress.
+     * Whether this button is autofocused.
+     * @remarks v14.365 corrected this description. The button is autofocused, which also makes it the
+     * action that an Enter keypress takes.
      */
     default?: boolean | undefined;
 

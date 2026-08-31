@@ -83,7 +83,7 @@ declare abstract class BaseActorDelta<
    *
    * Simply forwards to `BaseActor`
    */
-  static migrateData(source: AnyMutableObject): AnyMutableObject;
+  static migrateData(source: AnyMutableObject, options?: DataModel.MigrateDataOptions): AnyMutableObject;
 
   /**
    * Prepare changes to a descendent delta collection.

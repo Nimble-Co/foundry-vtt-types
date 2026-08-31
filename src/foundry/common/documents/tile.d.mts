@@ -48,7 +48,7 @@ declare abstract class BaseTile extends Document<"Tile", BaseTile.Schema, any> {
    * - `z` to `sort` (since v12, no specified end)
    * - `roof` to `restrictions.light` and `restrictions.weather` (since v12, no specified end)
    */
-  static override migrateData(source: AnyMutableObject): AnyMutableObject;
+  static override migrateData(source: AnyMutableObject, options?: DataModel.MigrateDataOptions): AnyMutableObject;
 
   /**
    * @remarks

@@ -479,7 +479,26 @@ declare namespace BasePackage {
     exclusive: boolean;
     owned: boolean;
     tags: string[];
+    compatibilityList: PackageCompatibilitySegment[];
     hasStorage: boolean;
+  }
+
+  /** One segment of a package's compatibility history from the package index. */
+  interface PackageCompatibilitySegment {
+    /** The first core version covered, inclusive. */
+    from: string;
+
+    /** The last core version covered, inclusive. `null` means an open-ended claim. */
+    to: string | null;
+
+    /** The highest core build in the segment verified as compatible, or `null`. */
+    verified: string | null;
+
+    /** The best package version to install for cores in this segment. */
+    version: string;
+
+    /** The manifest URL that installs that version. */
+    manifest: string;
   }
 
   /** @internal */
@@ -490,7 +509,11 @@ declare namespace BasePackage {
 
   interface LogOptions extends _Installed, InexactPartial<LogCompatibilityWarningOptions> {}
 
-  interface MigrateDataOptions extends _Installed {}
+  /**
+   * @remarks Since v14.364 `BasePackage.migrateData` no longer reads `installed`; it forwards the
+   * options to {@link foundry.abstract.DataModel.migrateData | `DataModel.migrateData`} unchanged.
+   */
+  interface MigrateDataOptions extends DataModel.MigrateDataOptions {}
 
   interface CleanDataOptions extends fields.DataField.CleanOptions {
     /**
@@ -649,6 +672,14 @@ declare class BasePackage<
    * @defaultValue `[]`
    */
   tags: string[];
+
+  /**
+   * The package's full compatibility history from the package index, as an ordered array of non-overlapping
+   * segments. Provided so that a client can determine which core version to downgrade or upgrade to when no
+   * released version supports the current core.
+   * @defaultValue `[]`
+   */
+  compatibilityList: BasePackage.PackageCompatibilitySegment[];
 
   /**
    * Define the package type in CONST.PACKAGE_TYPES that this class represents.

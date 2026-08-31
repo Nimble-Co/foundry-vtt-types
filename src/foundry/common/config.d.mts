@@ -8,6 +8,16 @@ type DataSchema = foundry.data.fields.DataSchema;
 declare namespace ApplicationConfiguration {
   interface Schema extends DataSchema {
     /**
+     * The server administrator username
+     */
+    adminUsername: fields.StringField<{
+      required: true;
+      blank: false;
+      nullable: true;
+      initial: null;
+    }>;
+
+    /**
      * The server administrator password (obscured)
      */
     adminPassword: fields.StringField<{
@@ -199,7 +209,7 @@ declare class ApplicationConfiguration extends DataModel<ApplicationConfiguratio
    * - pre-v9 `dataChannel`s to their updated names
    * - `awsConfig === true` to `""`
    */
-  static override migrateData(source: AnyMutableObject): AnyMutableObject;
+  static override migrateData(source: AnyMutableObject, options?: DataModel.MigrateDataOptions): AnyMutableObject;
 
   /**
    * Validate a port assignment.

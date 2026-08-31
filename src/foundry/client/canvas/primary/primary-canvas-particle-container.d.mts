@@ -1,38 +1,37 @@
-import type { PIXI } from "#configuration";
 import type { Identity } from "#utils";
-import type { CanvasTransformMixin } from "./primary-canvas-object.d.mts";
+import type PrimaryCanvasContainer from "./primary-canvas-container.d.mts";
 
 /**
  * A lightweight primary-canvas container designed for particle effects.
  * This container intentionally avoids any internal sorting or depth participation. Children render in insertion order.
+ * @remarks The constructor sets {@linkcode PIXI.Container.eventMode | eventMode} to `"none"` and both
+ * {@linkcode PIXI.Container.interactiveChildren | interactiveChildren} and
+ * {@linkcode PIXI.Container.sortableChildren | sortableChildren} to `false`.
  */
-declare class PrimaryCanvasParticleContainer extends CanvasTransformMixin(PIXI.Container) {
+declare class PrimaryCanvasParticleContainer extends PrimaryCanvasContainer {
   /**
-   * The elevation of this container.
-   * @remarks The setter throws if passed a non-numeric value.
+   * @remarks Sets {@linkcode PrimaryCanvasContainer._inPrimary | _inPrimary} to `true`. Unlike the
+   * {@linkcode PrimaryCanvasContainer} implementation it does not propagate the event to its children, because
+   * particles are not Primary Canvas Objects.
    */
-  get elevation(): number;
-
-  set elevation(value);
-
-  /**
-   * A key which resolves ties amongst objects at the same elevation within the same layer.
-   * @remarks The setter throws if passed a non-numeric value.
-   */
-  get sort(): number;
-
-  set sort(value);
+  protected override _onAddedPrimary(): void;
 
   /**
-   * Particle containers do not render depth.
-   * @remarks Always `false`.
+   * @remarks Sets {@linkcode PrimaryCanvasContainer._inPrimary | _inPrimary} to `false`. Unlike the
+   * {@linkcode PrimaryCanvasContainer} implementation it does not propagate the event to its children, because
+   * particles are not Primary Canvas Objects.
    */
-  get shouldRenderDepth(): boolean;
+  protected override _onRemovedPrimary(): void;
 
   /**
-   * @remarks Particle containers do not render depth, so this is a no-op.
+   * @remarks A no-op. Elevation is not propagated to the children, because particles are not Primary Canvas Objects.
    */
-  renderDepthData(renderer: PIXI.Renderer): void;
+  protected override _onElevationChange(): void;
+
+  /**
+   * @remarks Always `false`. Particle containers do not render depth.
+   */
+  protected override _shouldRenderDepth(): boolean;
 
   #PrimaryCanvasParticleContainer: true;
 }

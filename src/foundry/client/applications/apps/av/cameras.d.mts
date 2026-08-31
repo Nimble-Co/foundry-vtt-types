@@ -229,11 +229,17 @@ declare namespace CameraViews {
     /** Nameplate CSS classes. */
     css: string;
 
-    /** Whether to show player names on nameplates. */
-    playerName: string;
+    /**
+     * Whether to show player names on nameplates.
+     * @remarks v14.365 corrected the declared type of this member from `string`.
+     */
+    playerName: boolean;
 
-    /** Whether to show character names on nameplates. */
-    charname: string;
+    /**
+     * Whether to show character names on nameplates.
+     * @remarks v14.365 corrected the declared type of this member from `string`.
+     */
+    charname: boolean;
   }
 
   interface Video {

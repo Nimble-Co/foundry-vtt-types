@@ -1,4 +1,4 @@
-import type { ValueOf, FixedInstanceType, HandleEmptyObject, RequiredProps, NullishProps } from "#utils";
+import type { AnyObject, ValueOf, FixedInstanceType, HandleEmptyObject, RequiredProps, NullishProps } from "#utils";
 import type { Canvas } from "#client/canvas/_module.d.mts";
 import type { PlaceableObject } from "#client/canvas/placeables/_module.d.mts";
 import type { ShapePlaceableObject } from "./mixins/shapes.mjs";
@@ -195,6 +195,11 @@ declare class Drawing extends ShapePlaceableObject<DrawingDocument.Implementatio
 
   // _onUpdate and _onDelete are overridden but with no signature changes.
   // For type simplicity they are left off. These methods historically have been the source of a large amount of computation from tsc.
+
+  /**
+   * @remarks Returns `true` if any of `x`, `y`, `rotation`, or `shape` is in `changed`.
+   */
+  protected override _hasShapeChanged(changed: AnyObject): boolean;
 
   // `_initializeDragShape` is overridden in the v14 source (it returns `this.document._shape.clone()`,
   // i.e. a `RectangleShapeData | EllipseShapeData | PolygonShapeData`), but is intentionally left off here:

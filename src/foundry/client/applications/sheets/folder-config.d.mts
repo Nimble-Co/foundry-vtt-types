@@ -75,7 +75,7 @@ declare class FolderConfig<
     form: HTMLFormElement,
     formData: foundry.applications.ux.FormDataExtended,
     options?: unknown,
-  ): Promise<void>;
+  ): Promise<DocumentSheetV2.ProcessSubmitDataResult>;
 }
 
 declare namespace FolderConfig {

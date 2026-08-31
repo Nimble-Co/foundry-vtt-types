@@ -117,6 +117,11 @@ declare abstract class PlaceableObject<
   get interactionState(): MouseInteractionManager.INTERACTION_STATES | undefined;
 
   /**
+   * Is this object is excluded by the current filter in the placeable tab.
+   */
+  get isFilteredOut(): boolean;
+
+  /**
    * The bounding box for this PlaceableObject.
    * This is required if the layer uses a Quadtree, otherwise it is optional
    */

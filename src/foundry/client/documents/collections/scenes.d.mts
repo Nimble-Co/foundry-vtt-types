@@ -36,14 +36,24 @@ declare class Scenes extends WorldCollection<"Scene"> {
   get viewed(): Scene.Stored | undefined;
 
   /**
-   * Handle pre-loading the art assets for a Scene
+   * Handle preloading the art assets for a Scene.
    *
-   * @param sceneId - The Scene id to begin loading
-   * @param push    - Trigger other connected clients to also pre-load Scene resources (default: `false`)
-   * @remarks Returns the `game.socket` instance if `push` is true, otherwise returns an array of awaited returns of
-   * {@linkcode foundry.audio.AudioHelper.preloadSound} and {@linkcode foundry.canvas.TextureLoader.loadSceneTextures}.
+   * @param sceneId - The Scene ID to begin loading
+   * @param options - Additional options (default: `{}`)
+   * @remarks Returns an array of the awaited returns of
+   * {@linkcode foundry.audio.AudioHelper.preloadSound} and {@linkcode foundry.canvas.TextureLoader.loadSceneTextures},
+   * or `undefined` if no Scene has the given ID, or if a `level` is given that the Scene does not hold.
+   *
+   * Since v14.367 `broadcast` no longer short-circuits the local preload: the socket event is emitted and the
+   * local preload still runs. The method therefore no longer returns the socket.
    */
-  preload<Push extends boolean | undefined = false>(sceneId: string, push?: Push): Promise<Scenes.PreloadReturn<Push>>;
+  preload(sceneId: string, options?: Scenes.PreloadOptions): Promise<Scenes.PreloadReturn>;
+
+  /**
+   * @deprecated "You are passing the legacy `push` boolean to `Scenes#preload`. This is replaced by the
+   * `broadcast` option, for example `game.scenes.preload(sceneId, {broadcast: true})`." (since v14, until v16)
+   */
+  preload(sceneId: string, push: boolean): Promise<Scenes.PreloadReturn>;
 
   static _activateSocketListeners(socket: io.Socket): void;
 
@@ -90,7 +100,32 @@ declare namespace Scenes {
   interface ImplementationClass extends Document.Internal.ConfiguredCollectionClass<"Scene"> {}
   interface Implementation extends Document.Internal.ConfiguredCollection<"Scene"> {}
 
-  type PreloadReturn<Push extends boolean | undefined> = true extends Push ? io.Socket : Array<Sound | undefined>;
+  /**
+   * Options for {@linkcode Scenes.preload | Scenes#preload}.
+   */
+  interface PreloadOptions {
+    /**
+     * The Level ID to begin loading. Defaults to the initial level.
+     */
+    level?: string | undefined;
+
+    /**
+     * Trigger other connected clients to also preload Scene/Level resources.
+     * @defaultValue `false`
+     * @remarks Only a GM emits the socket event.
+     */
+    broadcast?: boolean | undefined;
+  }
+
+  /**
+   * The return of {@linkcode Scenes.preload | Scenes#preload}.
+   *
+   * @remarks `undefined` covers the two early returns: an unknown `sceneId`, and a `level` that the Scene
+   * does not hold. The array entry for
+   * {@linkcode foundry.canvas.TextureLoader.loadSceneTextures | TextureLoader.loadSceneTextures} resolves
+   * `undefined`, because that method returns `Promise<void>`.
+   */
+  type PreloadReturn = Array<Sound | undefined> | undefined;
 
   /** @deprecated Replaced by {@linkcode Scenes.ImplementationClass}. Will be removed in v15. */
   type ConfiguredClass = ImplementationClass;

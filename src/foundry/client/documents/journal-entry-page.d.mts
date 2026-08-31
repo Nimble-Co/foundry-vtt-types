@@ -63,8 +63,11 @@ declare namespace JournalEntryPage {
   > {}
 
   namespace Metadata {
+    /**
+     * The permissions for whether a certain user can create, update, or delete this document.
+     */
     interface Permissions {
-      create: "OWNER";
+      create(user: User.Internal.Implementation, doc: Implementation): boolean;
       delete: "OWNER";
     }
   }
