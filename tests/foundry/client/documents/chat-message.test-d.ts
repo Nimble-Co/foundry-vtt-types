@@ -127,3 +127,21 @@ await ChatMessage.create({
     },
   },
 });
+
+// v14.367: `notify` and `scroll` are forwarded from `_onCreate` to `ChatLog#postOne`
+await ChatMessage.create({}, { notify: false, scroll: true });
+await ChatMessage.create({}, { notify: undefined, scroll: undefined });
+await ChatMessage.create({}, { messageMode: "ic", chatBubble: true, notify: true, scroll: false });
+
+// @ts-expect-error `notify` must be a boolean
+await ChatMessage.create({}, { notify: "yes" });
+
+// @ts-expect-error `scroll` must be a boolean
+await ChatMessage.create({}, { scroll: "bottom" });
+
+// v14.367: `notify` is forwarded from `_onUpdate` to `ChatLog#updateMessage`; `scroll` is create-only
+await chat.update({}, { notify: true });
+await chat.update({}, { notify: undefined });
+
+// @ts-expect-error `scroll` is not an update option
+await chat.update({}, { scroll: true });

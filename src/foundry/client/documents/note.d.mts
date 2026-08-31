@@ -976,6 +976,17 @@ declare class NoteDocument extends BaseNote.Internal.CanvasDocument {
   ): Promise<NoteDocument.CreateDialogReturn<Options>>;
 
   /**
+   * A Note is never hidden.
+   *
+   * @remarks `NoteDocument` has no `hidden` schema field. This is a plain class property that is always `false`.
+   * @defaultValue
+   * ```typescript
+   * false
+   * ```
+   */
+  readonly hidden: false;
+
+  /**
    * The associated JournalEntry which is referenced by this Note
    */
   get entry(): JournalEntry.Implementation | undefined;

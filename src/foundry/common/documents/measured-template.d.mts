@@ -54,7 +54,7 @@ declare abstract class BaseMeasuredTemplate extends Document<"MeasuredTemplate",
    * Migrations:
    * - `user` to `author` (since v12, no specified end)
    */
-  static override migrateData(source: AnyMutableObject): AnyMutableObject;
+  static override migrateData(source: AnyMutableObject, options?: DataModel.MigrateDataOptions): AnyMutableObject;
 
   /**
    * @remarks

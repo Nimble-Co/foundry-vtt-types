@@ -10,6 +10,13 @@ expectTypeOf(
   mySM["_getAvailableLevels"](new Set<Level.Implementation>()),
 ).toEqualTypeOf<Set<Level.Implementation> | void>();
 expectTypeOf(mySM["_onInit"]()).toEqualTypeOf<Promise<void>>();
+
+declare const someLevel: Level.Implementation;
+expectTypeOf(mySM["_loadTextures"]({}, [], someLevel)).toBeVoid();
+expectTypeOf(mySM["_loadTextures"]({ foo: "path/to/texture.webp" }, ["path/to/other.webp"], someLevel)).toBeVoid();
+
+// @ts-expect-error `_loadTextures` is protected.
+mySM._loadTextures({}, [], someLevel);
 expectTypeOf(mySM["_onDraw"]()).toEqualTypeOf<Promise<void>>();
 expectTypeOf(mySM["_onReady"]()).toEqualTypeOf<Promise<void>>();
 expectTypeOf(mySM["_onTearDown"]({})).toEqualTypeOf<Promise<void>>();

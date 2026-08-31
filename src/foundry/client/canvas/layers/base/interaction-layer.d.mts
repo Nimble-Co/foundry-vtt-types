@@ -10,8 +10,11 @@ import Canvas = foundry.canvas.Canvas;
 declare abstract class InteractionLayer extends CanvasLayer {
   /**
    * The shared palette tool.
+   * @remarks Since v14 this is a getter. It returns a new object each time, and the `active` property of that object
+   * is computed from `ui.controls?.paletteOpen`.
+   * @privateRemarks `Partial` mirrors the `@type {Partial<SceneControlTool>}` of the Foundry source.
    */
-  static TOGGLE_PALETTE: Partial<SceneControls.Tool>;
+  static get TOGGLE_PALETTE(): Partial<SceneControls.Tool>;
 
   /**
    * Is this layer currently active

@@ -1,4 +1,5 @@
 import { expectTypeOf } from "vitest";
+import type { AnyMutableObject } from "fvtt-types/utils";
 import fields = foundry.data.fields;
 
 declare const myItem: foundry.documents.BaseItem;
@@ -29,3 +30,23 @@ class _GenericDataModel<Schema extends SchemaWithIndexSignatures> extends foundr
     this[Symbol("symbol")];
   }
 }
+
+// v14.367 gave `migrateData` and `migrateDataSafe` a second `options` parameter.
+declare const migrationSource: AnyMutableObject;
+expectTypeOf(foundry.abstract.DataModel.migrateData(migrationSource)).toEqualTypeOf<AnyMutableObject>();
+expectTypeOf(foundry.abstract.DataModel.migrateData(migrationSource, {})).toEqualTypeOf<AnyMutableObject>();
+expectTypeOf(
+  foundry.abstract.DataModel.migrateData(migrationSource, { partial: true, source: {} }),
+).toEqualTypeOf<AnyMutableObject>();
+expectTypeOf(
+  foundry.abstract.DataModel.migrateDataSafe(migrationSource, { partial: true }),
+).toEqualTypeOf<AnyMutableObject>();
+
+// @ts-expect-error `notAnOption` is not a member of `DataModel.MigrateDataOptions`
+foundry.abstract.DataModel.migrateData(migrationSource, { notAnOption: true });
+
+// An override on a Document takes the same options, so a subclass override compiles.
+expectTypeOf(
+  foundry.documents.BaseItem.migrateData(migrationSource, { partial: true }),
+).toEqualTypeOf<AnyMutableObject>();
+expectTypeOf(foundry.documents.BaseToken.migrateData(migrationSource, {})).toEqualTypeOf<AnyMutableObject>();

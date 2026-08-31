@@ -17,6 +17,16 @@ declare class HTMLSecretBlockElement extends HTMLElement {
    */
   get revealed(): boolean;
 
+  /**
+   * Show the button to toggle the revealed state?
+   * @defaultValue `true`
+   * @remarks Added in v14.365. {@linkcode foundry.applications.api.DocumentSheetV2._toggleDisabled | DocumentSheetV2#_toggleDisabled}
+   * sets this to the opposite of the sheet's disabled state.
+   */
+  get revealable(): boolean;
+
+  set revealable(value: boolean);
+
   connectedCallback(): void;
 
   /**

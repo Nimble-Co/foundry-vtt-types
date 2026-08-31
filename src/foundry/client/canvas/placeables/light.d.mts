@@ -1,5 +1,12 @@
 import type { ConfiguredObjectClassOrDefault } from "../../config.d.mts";
-import type { FixedInstanceType, HandleEmptyObject, IntentionalPartial, NullishProps, RequiredProps } from "#utils";
+import type {
+  AnyObject,
+  FixedInstanceType,
+  HandleEmptyObject,
+  IntentionalPartial,
+  NullishProps,
+  RequiredProps,
+} from "#utils";
 import type { PointLightSource, PointDarknessSource } from "#client/canvas/sources/_module.d.mts";
 import type { PlaceableObject } from "#client/canvas/placeables/_module.d.mts";
 import type { ShapePlaceableObject } from "./mixins/shapes.mjs";
@@ -178,6 +185,12 @@ declare class AmbientLight extends ShapePlaceableObject<AmbientLightDocument.Imp
 
   // _onCreate, _onUpdate, and _onDelete are all overridden but with no signature changes.
   // For type simplicity they are left off. These methods historically have been the source of a large amount of computation from tsc.
+
+  /**
+   * @remarks Returns `true` if any of `x`, `y`, or `rotation` is in `changed`, or if any of `dim`, `bright`, or
+   * `angle` is in `changed.config`.
+   */
+  protected override _hasShapeChanged(changed: AnyObject): boolean;
 
   protected override _canHUD(user: User.Implementation, event?: Canvas.Event.Pointer): boolean;
 

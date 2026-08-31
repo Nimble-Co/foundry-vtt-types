@@ -1,4 +1,5 @@
 import type { AnyMutableObject, Identity } from "#utils";
+import type { DataModel } from "#common/abstract/_module.d.mts";
 import type { fields } from "#common/data/_module.d.mts";
 import type VFXComponent from "../vfx-component.d.mts";
 import type { VFXPointSourcePolygonField, VFXReferenceField } from "../fields/_module.d.mts";
@@ -12,7 +13,7 @@ declare class VFXParticleGeneratorComponent extends VFXComponent<VFXParticleGene
 
   static override defineSchema(): fields.DataSchema;
 
-  static override migrateData(source: AnyMutableObject): AnyMutableObject;
+  static override migrateData(source: AnyMutableObject, options?: DataModel.MigrateDataOptions): AnyMutableObject;
 
   #VFXParticleGeneratorComponent: true;
 }

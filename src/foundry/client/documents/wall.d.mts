@@ -1042,16 +1042,6 @@ declare namespace WallDocument {
      * @defaultValue `false`
      */
     deleted: boolean;
-
-    /**
-     * The IDs of prior Levels, if the levels this Wall document is included in has changed.
-     */
-    priorLevels: string[] | Set<string>;
-
-    /**
-     * The restriction types that are either now affected or no longer affected by this Wall document.
-     */
-    changedTypes: Set<CONST.EDGE_RESTRICTION_TYPES>;
   }>;
 
   interface InitializeEdgeOptions extends _InitializeEdgeOptions {}
@@ -1078,6 +1068,29 @@ declare class WallDocument extends BaseWall.Internal.CanvasDocument {
    * @param context - Construction context options
    */
   constructor(data: WallDocument.CreateData, context?: WallDocument.ConstructionContext);
+
+  /**
+   * A Wall cannot be hidden in the same sense as other canvas Documents, though Walls in general (excluding non-secret
+   * doors) are not visible to players.
+   *
+   * @remarks `WallDocument` has no `hidden` schema field. This is a plain class property that is always `false`.
+   * @defaultValue
+   * ```typescript
+   * false
+   * ```
+   */
+  readonly hidden: false;
+
+  /**
+   * A Wall cannot be locked.
+   *
+   * @remarks `WallDocument` has no `locked` schema field. This is a plain class property that is always `false`.
+   * @defaultValue
+   * ```typescript
+   * false
+   * ```
+   */
+  readonly locked: false;
 
   /**
    * The Edge instance which represents this Wall.
@@ -1109,6 +1122,20 @@ declare class WallDocument extends BaseWall.Internal.CanvasDocument {
    * @param options - Options which modify how the edge is initialized
    */
   initializeEdge(options?: WallDocument.InitializeEdgeOptions): void;
+
+  /**
+   * Handle changes to the edge of this Wall document in a given level.
+   * @param level        - The level the edge is changed in
+   * @param newEdge      - The new edge in the level, unless removed from level
+   * @param priorEdge    - The prior edge in the level, unless added to level
+   * @param changedTypes - The affected edge restriction types
+   */
+  protected _onEdgeChange(
+    level: Level.Implementation,
+    newEdge: Edge | null,
+    priorEdge: Edge | null,
+    changedTypes: ReadonlySet<CONST.EDGE_RESTRICTION_TYPES>,
+  ): void;
 
   // _onCreate, _onUpdate, and _onDelete are overridden but with no signature changes from BaseWall.
 

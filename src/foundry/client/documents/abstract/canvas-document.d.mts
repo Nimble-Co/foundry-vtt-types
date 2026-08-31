@@ -46,6 +46,14 @@ declare class CanvasDocument<
    */
   get rendered(): boolean;
 
+  /**
+   * Is this CanvasDocument located in a given Level?
+   * @param level - The Level or ID
+   *
+   * @remarks The base implementation forwards to `includedInLevel`. `TokenDocument` overrides it.
+   */
+  locatedInLevel(level: string | Level.Implementation): boolean;
+
   // _preCreate, _onCreate, _onUpdate, and _onDelete are all overridden but with no signature changes.
   // For type simplicity they are left off. These methods historically have been the source of a large amount of computation from tsc.
 }

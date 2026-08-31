@@ -165,12 +165,22 @@ declare abstract class BaseEffectSource<
     data: IntentionalPartial<SourceData>,
   ): void;
 
+  /**
+   * If true is returned, {@linkcode BaseEffectSource._createShapes | BaseEffectSource#_createShapes} is called in
+   * {@linkcode BaseEffectSource.initialize | BaseEffectSource#initialize}.
+   * @param changes - Changes to the source data which were applied
+   * @remarks Not actually abstract, but always returns `true` in `BaseEffectSource`
+   * @privateRemarks Passed the same *flattened* partial data as {@linkcode BaseEffectSource._configure | _configure}
+   */
+  // TODO: Flatten<IntentionalPartial<SourceData>>
+  protected _couldShapesChange(changes: AnyObject): boolean;
+
   /** Create the polygon shape (or shapes) for this source using configured data. */
   protected abstract _createShapes(): void;
 
   /**
    * Subclass specific configuration steps. Occurs after data initialization and shape computation.
-   * Only called if the source is attached and not disabled.
+   * Only called if the source is attached and not disabled and its data or shapes have changed.
    * @param changes - Changes to the source data which were applied
    * @remarks Not actually abstract, but is a no-op in `BaseEffectSource`
    * @privateRemarks This is actually passed *flattened* partial data, and while we were very close to having

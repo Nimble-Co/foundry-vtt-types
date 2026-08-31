@@ -315,6 +315,13 @@ declare namespace Region {
 
     /** The area of the current shape. */
     area: number;
+
+    /**
+     * Test whether the given point is contained in the current shape and elevation range.
+     * @param point - The point to test
+     * @returns Is the point inside the animated Region?
+     */
+    testPoint: (point: Canvas.ElevatedPoint) => boolean;
   }
 
   interface TriangulationData {

@@ -2,6 +2,7 @@
 import type { FixedInstanceType, Mixin } from "#utils";
 import type { CanvasGroupMixin, PrimaryCanvasGroup } from "#client/canvas/groups/_module.d.mts";
 import type { placeables, primary } from "#client/canvas/_module.d.mts";
+import type CanvasTransformMixin from "./canvas-transform-mixin.d.mts";
 
 declare class PrimaryCanvasObject {
   /** @privateRemarks All mixin classes should accept anything for its constructor. */
@@ -24,6 +25,11 @@ declare class PrimaryCanvasObject {
   /**
    * The elevation of this object.
    * @defaultValue `0`
+   * @remarks The setter throws if passed a non-numeric value.
+   *
+   * Since v14, if the parent is a {@linkcode primary.PrimaryCanvasContainer | PrimaryCanvasContainer}, the assignment
+   * is ignored unless the new value is equal to the elevation of that parent. The container propagates its own
+   * elevation to each child instead.
    */
   get elevation(): number;
 
@@ -51,6 +57,19 @@ declare class PrimaryCanvasObject {
   set zIndex(value);
 
   /**
+   * Is this object in the primary group?
+   * @remarks Returns `this._primaryIndex >= 0`
+   */
+  get inPrimary(): boolean;
+
+  /**
+   * The index of this object in {@linkcode PrimaryCanvasGroup.objects | canvas.primary.objects}.
+   * @defaultValue `-1`
+   * @remarks Foundry marked `@private`
+   */
+  protected _primaryIndex: number;
+
+  /**
    * Event fired when this display object is added to a parent.
    * @param parent - The new parent container.
    * @remarks Foundry types this as taking a {@linkcode PIXI.Container} but then is more specific internally
@@ -59,15 +78,30 @@ declare class PrimaryCanvasObject {
   protected _onAdded(parent: PrimaryCanvasObjectMixin.Parent): void;
 
   /**
+   * Called when the PCO is now in the primary group.
+   */
+  protected _onAddedPrimary(): void;
+
+  /**
    * Event fired when this display object is removed from its parent.
    * @param parent - Parent from which the PCO is removed.
    */
   protected _onRemoved(parent: PrimaryCanvasObjectMixin.Parent): void;
 
-  /** @remarks See {@linkcode CanvasTransformMixinClass.updateCanvasTransform | CanvasTransformMixinClass#updateCanvasTransform} */
+  /**
+   * Called when the PCO is no longer in the primary group.
+   */
+  protected _onRemovedPrimary(): void;
+
+  /**
+   * Called when the elevation was changed.
+   */
+  protected _onElevationChange(): void;
+
+  /** @remarks Extends the {@linkcode CanvasTransformMixin} implementation. It also updates the quadtree entry and the depth flag. */
   updateCanvasTransform(): void;
 
-  /** @remarks See {@linkcode CanvasTransformMixinClass._onCanvasBoundsUpdate | CanvasTransformMixinClass#_onCanvasBoundsUpdate} */
+  /** @remarks Extends the {@linkcode CanvasTransformMixin} implementation. It also flags the quadtree entry as dirty. */
   protected _onCanvasBoundsUpdate(): void;
 
   /**
@@ -86,65 +120,6 @@ declare class PrimaryCanvasObject {
   renderDepthData(renderer: PIXI.Renderer): void;
 
   #PrimaryCanvasObject: true;
-}
-
-declare class CanvasTransformMixinClass {
-  /** @privateRemarks All mixin classes should accept anything for its constructor. */
-  constructor(...args: any[]);
-
-  /**
-   * The transform matrix from local space to canvas space.
-   */
-  canvasTransform: PIXI.Matrix;
-
-  /**
-   * The update ID of canvas transform matrix.
-   * @internal
-   * @remarks Accessed externally via `this.parent._canvasTransformID` in {@linkcode updateCanvasTransform}
-   */
-  protected _canvasTransformID: number;
-
-  /**
-   * The canvas bounds of this object.
-   */
-  canvasBounds: PIXI.Rectangle;
-
-  /**
-   * The canvas bounds of this object.
-   */
-  protected _canvasBounds: PIXI.Bounds;
-
-  /**
-   * The update ID of the canvas bounds.
-   * Increment to force recalculation.
-   */
-  protected _canvasBoundsID: number;
-
-  /**
-   * Calculate the canvas bounds of this object.
-   */
-  protected _calculateCanvasBounds(): void;
-
-  /**
-   * Recalculate the canvas transform and bounds of this object and its children, if necessary.
-   */
-  updateCanvasTransform(): void;
-
-  /**
-   * Called when the canvas transform changed.
-   */
-  protected _onCanvasTransformUpdate(): void;
-
-  /**
-   * Called when the canvas bounds changed.
-   */
-  protected _onCanvasBoundsUpdate(): void;
-
-  /**
-   * Is the given point in canvas space contained in this object?
-   * @param point - The point in canvas space.
-   */
-  containsCanvasPoint(point: PIXI.IPointData): boolean;
 }
 
 /**
@@ -174,19 +149,4 @@ declare namespace PrimaryCanvasObjectMixin {
   type OwningObject = placeables.PlaceableObject.Any | CanvasGroupMixin.AnyMixed;
 }
 
-/**
- * A mixin which decorates a {@linkcode PIXI.DisplayObject | DisplayObject} with additional properties for canvas transforms and bounds.
- * @param DisplayObject - The parent `DisplayObject` class being mixed
- * @privateRemarks Despite naming the argument `DisplayObject`, it's typed as only taking `PIXI.Container`s, which matches core's usage
- */
-declare function CanvasTransformMixin<BaseClass extends CanvasTransformMixin.BaseClass>(
-  DisplayObject: BaseClass,
-): Mixin<typeof CanvasTransformMixinClass, BaseClass>;
-
-declare namespace CanvasTransformMixin {
-  interface AnyMixedConstructor extends ReturnType<typeof CanvasTransformMixin<CanvasTransformMixin.BaseClass>> {}
-  interface AnyMixed extends FixedInstanceType<AnyMixedConstructor> {}
-
-  type BaseClass = PIXI.Container.AnyConstructor;
-}
-export { PrimaryCanvasObjectMixin as default, CanvasTransformMixin };
+export default PrimaryCanvasObjectMixin;

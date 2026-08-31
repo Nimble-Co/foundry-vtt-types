@@ -47,3 +47,11 @@ myCanvas.pendingRenderFlags.OBJECTS.add(myCanvas.perception);
 expectTypeOf(myCanvas.hidden).toEqualTypeOf<HiddenCanvasGroup | undefined>();
 expectTypeOf(myCanvas.rendered).toEqualTypeOf<RenderedCanvasGroup>();
 expectTypeOf(myCanvas.environment).toEqualTypeOf<EnvironmentCanvasGroup>();
+
+// v14.367: `#determineInitialLevel` became `static _determineInitialLevel`.
+declare const someScene367: Scene.Implementation;
+declare const someManager: foundry.canvas.SceneManager.Any | null;
+expectTypeOf(Canvas["_determineInitialLevel"](someScene367, someManager)).toBeString();
+
+// @ts-expect-error `_determineInitialLevel` is protected.
+Canvas._determineInitialLevel(someScene367, someManager);

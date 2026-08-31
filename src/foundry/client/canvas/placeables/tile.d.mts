@@ -1,5 +1,5 @@
 import type { ConfiguredObjectClassOrDefault } from "../../config.d.mts";
-import type { FixedInstanceType, HandleEmptyObject } from "#utils";
+import type { AnyObject, FixedInstanceType, HandleEmptyObject } from "#utils";
 import type { PlaceableObject } from "#client/canvas/placeables/_module.d.mts";
 import type { ShapePlaceableObject } from "./mixins/shapes.mjs";
 import type { PrimarySpriteMesh } from "#client/canvas/primary/_module.d.mts";
@@ -100,11 +100,6 @@ declare class Tile extends ShapePlaceableObject<TileDocument.Implementation> {
    */
   get volume(): number;
 
-  /**
-   * Is this Tile currently visible on the Canvas?
-   */
-  override get isVisible(): boolean;
-
   protected override _draw(options: HandleEmptyObject<Tile.DrawOptions>): Promise<void>;
 
   protected override _clear(): void;
@@ -153,6 +148,12 @@ declare class Tile extends ShapePlaceableObject<TileDocument.Implementation> {
 
   // _onUpdate is overridden but with no signature changes.
   // For type simplicity it is left off. This method historically has been the source of a large amount of computation from tsc.
+
+  /**
+   * @remarks Returns `true` if any of `x`, `y`, `rotation`, `width`, or `height` is in `changed`, or if either
+   * `anchorX` or `anchorY` is in `changed.texture`.
+   */
+  protected override _hasShapeChanged(changed: AnyObject): boolean;
 
   /**
    * Create a preview tile with a background texture instead of an image

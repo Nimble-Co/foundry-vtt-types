@@ -7,12 +7,12 @@
 // them here because it has poor discoverability. It's also just nice to
 // have as reference to keep us synced with the latest version of Foundry.
 
+// Added in v14.365. Foundry moved these two types here from `notifications.mjs`.
+
+import type Notifications from "./notifications.d.mts";
+
 export {};
 
-type RingColorBand = foundry.canvas.placeables.tokens.TokenRing.ColorBand;
+type Notification = Notifications.Notification;
 
-type DynamicRingId = string;
-
-type RingData = foundry.canvas.placeables.tokens.TokenRing.RingData;
-
-type RegionAnimationState = foundry.canvas.placeables.Region.AnimationState;
+type NotificationOptions = Notifications.NotifyOptions;

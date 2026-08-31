@@ -41,7 +41,7 @@ declare class PlaylistSoundConfig<
     form: HTMLFormElement,
     formData: FormDataExtended,
     options?: unknown,
-  ): Promise<void>;
+  ): Promise<DocumentSheetV2.ProcessSubmitDataResult>;
 }
 
 declare namespace PlaylistSoundConfig {

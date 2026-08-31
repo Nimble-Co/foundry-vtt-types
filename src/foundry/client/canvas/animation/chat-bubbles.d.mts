@@ -9,7 +9,7 @@ import type { placeables } from "../_module.d.mts";
 declare class ChatBubbles {
   /**
    * The Handlebars template used to render Chat Bubbles.
-   * @defaultValue `"templates/hud/chat-bubble.html"`
+   * @defaultValue `"templates/hud/chat-bubble.hbs"`
    */
   template: string;
 

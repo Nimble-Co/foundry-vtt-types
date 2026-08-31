@@ -3,6 +3,8 @@
 // While `.mts` could work, to avoid `import/no-unresolved` from erroring `.mjs` is used.
 /* eslint-disable import-x/extensions */
 
+export * as types from "./_types.mjs";
+
 export { default as ContextMenu } from "./context-menu.mjs";
 export { default as DragDrop } from "./drag-drop.mjs";
 export { default as Draggable } from "./draggable.mjs";

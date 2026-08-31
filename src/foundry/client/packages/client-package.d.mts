@@ -20,7 +20,11 @@ declare namespace ClientPackageMixin {
   type BaseClass = BasePackage.Internal.Constructor;
 
   interface PackageCompatibilityBadge {
-    type: "safe" | "unsafe" | "warning" | "neutral" | "error";
+    /**
+     * A CSS class applied to the badge.
+     * @remarks v14.365 corrected this list. It dropped `"safe"` and `"unsafe"` and added `"success"`.
+     */
+    type: "success" | "warning" | "neutral" | "error";
     tooltip: string;
     label?: string;
     icon?: string;

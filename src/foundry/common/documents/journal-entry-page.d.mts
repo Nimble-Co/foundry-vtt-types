@@ -35,7 +35,7 @@ declare abstract class BaseJournalEntryPage<
    *   coreTypes: ["text", "image", "pdf", "video"],
    *   compendiumIndexFields: ["name", "type", "sort"],
    *   permissions: {
-   *     create: "OWNER",
+   *     create: this.#canCreate,
    *     delete: "OWNER"
    *   },
    *   schemaVersion: "13.341"

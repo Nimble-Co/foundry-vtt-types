@@ -21,6 +21,21 @@ export declare const WEBSITE_URL: "https://foundryvtt.com";
 export declare const WEBSITE_API_URL: "https://api.foundryvtt.com";
 
 /**
+ * The static, public package index artifact.
+ */
+export declare const PACKAGE_INDEX_URL: "https://r2.foundryvtt.com/package-api-public/index-latest.json";
+
+/**
+ * A fallback location for the package index, which will typically redirect to the above URL.
+ */
+export declare const PACKAGE_INDEX_FALLBACK_URL: "https://foundryvtt.com/_api/packages/index/";
+
+/**
+ * The endpoint for checking user entitlements.
+ */
+export declare const PACKAGE_OWNED_URL: "https://api.foundryvtt.com/_api/packages/entitlements/";
+
+/**
  * An ASCII greeting displayed to the client
  */
 export const ASCII = `_______________________________________________________________
@@ -754,7 +769,7 @@ export type GRID_SNAPPING_MODES = Brand<number, "constants.GRID_SNAPPING_MODES">
 /**
  * A list of supported setup URL names
  */
-export declare const SETUP_VIEWS: readonly ["auth", "license", "setup", "players", "join", "update"];
+export declare const SETUP_VIEWS: readonly ["auth", "license", "setup", "players", "join", "create", "update", "quit"];
 export type SETUP_VIEWS = ValueOf<typeof SETUP_VIEWS>;
 
 /**

@@ -39,7 +39,7 @@ declare class JournalEntryCategoryConfig<
     form: HTMLFormElement,
     formData: FormDataExtended,
     options?: unknown,
-  ): Promise<void>;
+  ): Promise<DocumentSheetV2.ProcessSubmitDataResult>;
 
   #journalEntryCategoryConfig: true;
 }

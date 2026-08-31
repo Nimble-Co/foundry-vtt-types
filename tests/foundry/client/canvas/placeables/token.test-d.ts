@@ -98,6 +98,13 @@ expectTypeOf(token.isTargeted).toBeBoolean();
 expectTypeOf(token.isDragged).toBeBoolean();
 expectTypeOf(token.detectionModes).toEqualTypeOf<Record<string, { enabled: boolean; range: number | null }>>();
 expectTypeOf(token.isVisible).toBeBoolean();
+
+// v14.367: `#testCulled` became `_testCulled`.
+expectTypeOf(token["_testCulled"]()).toBeBoolean();
+
+// @ts-expect-error `_testCulled` is protected.
+token._testCulled();
+
 expectTypeOf(token.isInteractable).toBeBoolean();
 expectTypeOf(token.hasSight).toBeBoolean();
 expectTypeOf(token["_isLightSource"]()).toBeBoolean();
@@ -196,6 +203,8 @@ expectTypeOf(token["_refreshNameplate"]()).toBeVoid();
 expectTypeOf(token["_refreshMesh"]()).toBeVoid();
 expectTypeOf(token["_refreshShader"]()).toBeVoid();
 expectTypeOf(token["_refreshBorder"]()).toBeVoid();
+expectTypeOf(token["_getBarColors"](0, doc.getBarAttribute("foo")!)).toEqualTypeOf<Token.BarColors>();
+
 expectTypeOf(token["_getBorderColor"]()).toBeNumber();
 
 expectTypeOf(token["_refreshTarget"]()).toBeVoid();
@@ -543,3 +552,12 @@ expectTypeOf(
 test("Ensure that PIXI.Texture.from can accept PIXI.Resource", () => {
   PIXI.Texture.from(token.mesh!.texture!.baseTexture.resource);
 });
+
+// v14.367: new protected hook for movement wall collision configuration.
+declare const movementSegment: Omit<TokenDocument.MovementSegmentData, "teleport">;
+expectTypeOf(
+  token["_getMovementCollisionTestConfiguration"](movementSegment, { preview: true }),
+).toEqualTypeOf<foundry.canvas.geometry.PointSourcePolygon.Config>();
+
+// @ts-expect-error `options.preview` is always defined at the call site.
+token["_getMovementCollisionTestConfiguration"](movementSegment, {});

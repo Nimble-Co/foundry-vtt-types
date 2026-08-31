@@ -16,6 +16,16 @@ declare namespace DocumentSheetV2 {
   interface Any extends AnyDocumentSheetV2 {}
   interface AnyConstructor extends Identity<typeof AnyDocumentSheetV2> {}
 
+  /**
+   * The result of {@link DocumentSheetV2._processSubmitData | `DocumentSheetV2#_processSubmitData`}. It tells
+   * which Document the submission created or updated. Neither can occur, in which case both properties are
+   * absent.
+   */
+  interface ProcessSubmitDataResult {
+    created?: Document.Any | undefined;
+    updated?: Document.Any | undefined;
+  }
+
   interface RenderContext<ConcreteDocument extends Document.Any> extends ApplicationV2.RenderContext {
     document: ConcreteDocument;
     source: ConcreteDocument["_source"];
@@ -192,6 +202,9 @@ declare class DocumentSheetV2<
    * @param form     - The form element that was submitted
    * @param formData - Processed and validated form data to be used for a document update
    * @param options  - Additional options altering the request
+   * @returns The result of the form submission. It tells which Document was created or updated. Neither
+   *          creation nor update can occur, in which case both properties are absent.
+   * @throws An `Error` if Document creation or update was prohibited
    * @privateRemarks TODO: Improve options to capture the Create and/or Update options available to the Document
    */
   protected _processSubmitData(
@@ -199,7 +212,7 @@ declare class DocumentSheetV2<
     form: HTMLFormElement,
     formData: FormDataExtended,
     options?: unknown,
-  ): Promise<void>;
+  ): Promise<DocumentSheetV2.ProcessSubmitDataResult>;
 
   /**
    * Provide a deprecation path for converted V1 document sheets.

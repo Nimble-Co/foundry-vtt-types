@@ -20,6 +20,8 @@ type RelatedPackageData = unknown;
 
 type PackageCompatibilityData = unknown;
 
+type PackageCompatibilitySegment = unknown;
+
 type PackageRelationshipsData = unknown;
 
 type PackageManifestData = unknown;

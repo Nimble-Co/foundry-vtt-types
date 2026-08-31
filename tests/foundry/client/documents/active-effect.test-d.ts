@@ -1,5 +1,5 @@
 import { expectTypeOf } from "vitest";
-import type { AnyMutableObject } from "fvtt-types/utils";
+import type { AnyMutableObject, AnyObject } from "fvtt-types/utils";
 import { database, testID } from "../../../utils.ts";
 import * as itemHelpers from "./item.test-d.ts";
 
@@ -724,6 +724,23 @@ effect.isTemporary = false;
 expectTypeOf(effect.sourceName).toEqualTypeOf<string>();
 // @ts-expect-error Only getter, no setter
 effect.sourceName = "foo";
+
+// Added in v14.367
+expectTypeOf(effect.shouldApplyChange(change)).toEqualTypeOf<boolean>();
+expectTypeOf(effect.shouldApplyChange(change, {})).toEqualTypeOf<boolean>();
+expectTypeOf(effect.shouldApplyChange(change, { phase: "initial" })).toEqualTypeOf<boolean>();
+expectTypeOf(
+  effect.shouldApplyChange(change, { phase: undefined, replacementData: { abilities: {} } }),
+).toEqualTypeOf<boolean>();
+
+// `replacementData` is an object, despite Foundry's `{string}` JSDoc tag
+// @ts-expect-error `replacementData` is not a string
+effect.shouldApplyChange(change, { replacementData: "not an object" });
+
+expectTypeOf(effect.getReplacementData({ abilities: {} })).toEqualTypeOf<AnyObject>();
+
+// @ts-expect-error `baseData` is required
+effect.getReplacementData();
 
 /* eslint-disable @typescript-eslint/no-deprecated -- exercising the v14 instance deprecation shims */
 expectTypeOf(effect.apply(someActor, change)).toEqualTypeOf<AnyMutableObject>();

@@ -1064,6 +1064,20 @@ declare namespace RollTable {
     messageOptions: ChatMessage.Database.CreateDocumentsOperation;
   }
 
+  /** @internal */
+  type _NormalizeOptions = InexactPartial<{
+    /**
+     * Save the clone to the database? If `false`, an updated clone is returned.
+     * @defaultValue `true`
+     */
+    save: boolean;
+  }>;
+
+  /**
+   * Options for {@linkcode RollTable.normalize | RollTable#normalize}.
+   */
+  interface NormalizeOptions extends _NormalizeOptions {}
+
   interface RollOptions {
     /**
      * An alternative dice Roll to use instead of the default table formula
@@ -1075,6 +1089,16 @@ declare namespace RollTable {
      * @defaultValue `true`
      */
     recursive?: boolean;
+
+    /**
+     * Normalize the table before rolling.
+     * @defaultValue `true`
+     *
+     * @privateRemarks Spelled with an explicit `| undefined` because Foundry destructures this with a default,
+     * so an explicit `undefined` is meaningful under `exactOptionalPropertyTypes`. The neighbouring members
+     * predate this and do not yet do the same.
+     */
+    normalize?: boolean | undefined;
 
     /**
      * An internal flag used to track recursion depth
@@ -1149,8 +1173,13 @@ declare class RollTable extends BaseRollTable.Internal.ClientDocument {
 
   /**
    * Normalize the probabilities of rolling each item in the RollTable based on their assigned weights
+   * @param options - Additional options
+   *
+   * @remarks Foundry types the return as `Promise<this>`. With `save: true` (the default) the method calls
+   * {@linkcode RollTable.update | RollTable#update}, which resolves `undefined` if the update is prevented,
+   * so `undefined` stays in the union. With `save: false` the method resolves a clone and never `undefined`.
    */
-  normalize(): Promise<this | undefined>;
+  normalize(options?: RollTable.NormalizeOptions): Promise<this | undefined>;
 
   /**
    * Reset the state of the RollTable to return any drawn items to the table
@@ -1187,6 +1216,12 @@ declare class RollTable extends BaseRollTable.Internal.ClientDocument {
    * @returns An Array of results
    */
   getResultsForRoll(value: number): TableResult.Stored[];
+
+  /**
+   * @remarks Derives {@linkcode RollTable.formula | formula} from the sum of the result weights when the
+   * source formula is empty, so that a table with no formula is still rollable.
+   */
+  override prepareDerivedData(): void;
 
   /**
    * Create embedded roll table markup.

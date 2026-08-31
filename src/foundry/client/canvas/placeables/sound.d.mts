@@ -1,6 +1,7 @@
 import type Sound from "#client/audio/sound.d.mts";
 import type { ConfiguredObjectClassOrDefault } from "../../config.d.mts";
 import type {
+  AnyObject,
   FixedInstanceType,
   HandleEmptyObject,
   InexactPartial,
@@ -170,6 +171,11 @@ declare class AmbientSound extends ShapePlaceableObject<AmbientSoundDocument.Imp
 
   // _onCreate, _onUpdate, and _onDelete are all overridden but with no signature changes.
   // For type simplicity they are left off. These methods historically have been the source of a large amount of computation from tsc.
+
+  /**
+   * @remarks Returns `true` if any of `x`, `y`, or `radius` is in `changed`.
+   */
+  protected override _hasShapeChanged(changed: AnyObject): boolean;
 
   protected override _canHUD(user: User.Implementation, event?: Canvas.Event.Pointer): boolean;
 

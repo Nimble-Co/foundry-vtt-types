@@ -197,9 +197,26 @@ declare global {
       hud?: boolean | { actorTypes: string[] } | undefined | null;
     }
 
+    /**
+     * Configure which Actor system attributes can be tracked by Tokens.
+     * @remarks v14.364 corrected the type of {@linkcode CONFIG.Actor | CONFIG.Actor.trackableAttributes}
+     * from `Record<string, string>` and documented both members as optional.
+     */
     interface TrackableAttribute {
-      bar: string[];
-      value: string[];
+      /** Paths to attributes that have both a value and a max property. */
+      bar?: string[] | undefined;
+
+      /** Paths to attributes that have only a value property. */
+      value?: string[] | undefined;
+    }
+
+    /**
+     * Configuration for one token resource bar.
+     * @remarks Added in v14.365. {@linkcode foundry.canvas.placeables.Token._getBarColors | Token#_getBarColors}
+     * reads it.
+     */
+    interface TokenBarConfig {
+      colors: foundry.canvas.placeables.Token.BarColors;
     }
   }
 
@@ -2180,6 +2197,23 @@ declare global {
 
       /** @defaultValue `"TOKEN.Adjectives"` */
       adjectivesPrefix: string;
+
+      /**
+       * Configuration for token resource bars.
+       * @defaultValue
+       * ```typescript
+       * {
+       *   bar1: { colors: { empty: Color.from("#FF0000"), full: Color.from("#7FFF00") } },
+       *   bar2: { colors: { empty: Color.from("#00007F"), full: Color.from("#7FB2FF") } }
+       * }
+       * ```
+       * @remarks Added in v14.365. Before then the colors were hard-coded in the private draw method of
+       * {@linkcode foundry.canvas.placeables.Token}.
+       */
+      barConfig: {
+        bar1: CONFIG.TokenBarConfig;
+        bar2: CONFIG.TokenBarConfig;
+      };
 
       /** @defaultValue `new `{@linkcode foundry.canvas.placeables.tokens.TokenRingConfig}`()` */
       ring: foundry.canvas.placeables.tokens.TokenRingConfig;

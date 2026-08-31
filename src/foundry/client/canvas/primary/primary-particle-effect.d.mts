@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-deprecated -- the whole class is @deprecated (since v14, until v16); the Any-pattern self-references are intentional */
 import type { Identity } from "#utils";
 import type { IDestroyOptions } from "pixi.js";
-import type { CanvasTransformMixin } from "./primary-canvas-object.d.mts";
+import type CanvasTransformMixin from "./canvas-transform-mixin.d.mts";
 
 /**
  * A configurable particle effect meant to be used in the PrimaryCanvasGroup.

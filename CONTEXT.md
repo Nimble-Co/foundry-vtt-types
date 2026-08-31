@@ -80,7 +80,7 @@ npm run lint:fix
 
 The Foundry source is the ground truth. Before you change a type, read the related Foundry source file.
 
-The source is at `/mnt/d/foundrydevelopment/FoundryV14/App/resources/app`.
+The source is at `~/foundry/v14`, if not found ask the user where the foundry source is.
 
 | This repository                 | Foundry source      |
 | ------------------------------- | ------------------- |
@@ -90,7 +90,7 @@ The source is at `/mnt/d/foundrydevelopment/FoundryV14/App/resources/app`.
 
 If the Foundry source does not agree with a type in this repository, the Foundry source wins.
 
-The migration used build 14.363.0 as the reference. Later builds are not compared with the type surface.
+Build **14.367** is the reference build. Later builds are not compared with the type surface.
 
 For Foundry API documentation in prose, use the `context7` MCP server. First call `mcp__context7__resolve-library-id`. Then call `mcp__context7__query-docs`. Use this server before you use a web search.
 

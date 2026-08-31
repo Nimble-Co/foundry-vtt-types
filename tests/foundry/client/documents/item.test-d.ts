@@ -124,6 +124,12 @@ expectTypeOf(item.transferredEffects).toEqualTypeOf<ActiveEffect.Implementation[
 expectTypeOf(item.type).toEqualTypeOf<"weapon">();
 expectTypeOf(item.getRollData()).toEqualTypeOf<AnyObject>();
 
+// v14.367: `Item` gained an `_initializeSource` override that applies compendium art
+expectTypeOf(item["_initializeSource"]({ name: "Mighty Axe of Killing", type: "weapon" })).toEqualTypeOf<Item.Source>();
+expectTypeOf(
+  item["_initializeSource"]({ name: "Mighty Axe of Killing", type: "weapon" }, {}),
+).toEqualTypeOf<Item.Source>();
+
 declare const known: Item.Known;
 if (known.type === "weapon") {
   expectTypeOf(known.system.attack).toEqualTypeOf<number>();

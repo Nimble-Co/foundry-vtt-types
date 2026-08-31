@@ -70,6 +70,15 @@ declare class PrimaryCanvasGroup<
   protected _backgroundColor: Color.RGBColorVector | undefined;
 
   /**
+   * All PCOs that are in this primary group in no particular order.
+   * @defaultValue `[]`
+   * @privateRemarks Foundry types this as `ReadonlyArray<PrimaryCanvasObject>`. Core adds and removes entries from
+   * {@linkcode PrimaryCanvasObjectMixin.AnyMixed._onAddedPrimary | PrimaryCanvasObject#_onAddedPrimary} and
+   * {@linkcode PrimaryCanvasObjectMixin.AnyMixed._onRemovedPrimary | PrimaryCanvasObject#_onRemovedPrimary} only.
+   */
+  objects: readonly PrimaryCanvasObjectMixin.AnyMixed[];
+
+  /**
    * Track the set of HTMLVideoElements which are currently playing as part of this group.
    */
   videoMeshes: Set<PrimarySpriteMesh.Any>;

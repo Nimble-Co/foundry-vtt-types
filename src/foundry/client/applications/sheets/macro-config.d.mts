@@ -43,7 +43,7 @@ declare class MacroConfig<
     form: HTMLFormElement,
     formData: FormDataExtended,
     options?: unknown,
-  ): Promise<void>;
+  ): Promise<DocumentSheetV2.ProcessSubmitDataResult>;
 }
 
 declare namespace MacroConfig {

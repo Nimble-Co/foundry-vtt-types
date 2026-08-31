@@ -1,4 +1,4 @@
-import type { FixedInstanceType, HandleEmptyObject, Mixin } from "#utils";
+import type { AnyObject, FixedInstanceType, HandleEmptyObject, Mixin } from "#utils";
 import type { ShapeControlsHandle } from "#client/canvas/containers/_module.d.mts";
 import type { Canvas } from "#client/canvas/_module.d.mts";
 import type { PlaceableObject } from "#client/canvas/placeables/_module.d.mts";
@@ -118,6 +118,16 @@ declare class ShapeObject {
    * Refresh the measurements.
    */
   protected _refreshMeasurements(): void;
+
+  /**
+   * Has the shape or a shape changed?
+   * @param changed - The changes of the update operation
+   * @returns True if the shape or a shape has changed
+   * @remarks Foundry marks this `@internal`
+   * @throws If the document schema has neither a `shapes` nor a `shape` field. Each concrete shape placeable must
+   * implement this method.
+   */
+  protected _hasShapeChanged(changed: AnyObject): boolean;
 
   #ShapeObject: true;
 }
@@ -242,6 +252,16 @@ declare abstract class ShapePlaceableObject<
    * Refresh the measurements.
    */
   protected _refreshMeasurements(): void;
+
+  /**
+   * Has the shape or a shape changed?
+   * @param changed - The changes of the update operation
+   * @returns True if the shape or a shape has changed
+   * @remarks Foundry marks this `@internal`
+   * @throws If the document schema has neither a `shapes` nor a `shape` field. Each concrete shape placeable must
+   * implement this method.
+   */
+  protected _hasShapeChanged(changed: AnyObject): boolean;
 }
 
 /**

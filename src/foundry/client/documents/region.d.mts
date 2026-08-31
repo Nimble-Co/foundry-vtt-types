@@ -113,6 +113,15 @@ declare class RegionDocument extends BaseRegion.Internal.CanvasDocument {
   testPoint(point: foundry.canvas.Canvas.ElevatedPoint): boolean;
 
   /**
+   * Test whether the given elevation is within the elevation range of this Region.
+   * @param elevationRange - The elevation range.
+   * @param elevation      - The elevation.
+   * @returns Is the elevation within the elevation range of this Region?
+   * @internal
+   */
+  static _testElevation(elevationRange: RegionDocument.ElevationRange, elevation: number): boolean;
+
+  /**
    * Create the Clipper polygon tree for this Region.
    * @internal
    */
@@ -122,13 +131,17 @@ declare class RegionDocument extends BaseRegion.Internal.CanvasDocument {
    * Split the movement path into its segments.
    * @param waypoints - The waypoints of movement.
    * @param samples   - The points relative to the waypoints that are tested.
-   *                    Whenever one of them is inside the region, the moved object
-   *                    is considered to be inside the region.
+   *                    Whenever one of them is inside the region with respect to the
+   *                    `tolerance`, the moved object is considered to be inside the region.
+   * @param tolerance - The tolerance of point containment (see the `distance` parameter of
+   *                    {@linkcode foundry.data.regionShapes.RegionPolygonTree | RegionPolygonTree}`#testPoint`).
+   *                    (default: `0`)
    * @returns The movement split into its segments.
    */
   segmentizeMovementPath(
     waypoints: RegionDocument.SegmentizeMovementPathWaypoint[],
     samples: foundry.canvas.Canvas.Point[],
+    tolerance?: number,
   ): RegionDocument.MovementSegment[];
 
   /**
@@ -1490,6 +1503,21 @@ declare namespace RegionDocument {
   /** @internal */
   interface _EventData {
     readonly [K: string]: Document.Any | MaybeArray<_EventData>;
+  }
+
+  /**
+   * @remarks The argument type for {@linkcode RegionDocument._testElevation | RegionDocument._testElevation}.
+   * Foundry writes the range inline as `{bottom: number; top: number; topInclusive: boolean}`.
+   */
+  interface ElevationRange {
+    /** The bottom elevation level where the Region begins to take effect. */
+    bottom: number;
+
+    /** The top elevation level where the Region's effect ends. */
+    top: number;
+
+    /** Is the top elevation level inclusive? */
+    topInclusive: boolean;
   }
 
   interface SegmentizeMovementPathWaypoint {

@@ -724,6 +724,13 @@ declare namespace ParticleGenerator {
      */
     curve: CurvePoint[];
 
+    /**
+     * Evaluate curve values in discrete steps instead of interpolation.
+     * @defaultValue `false`
+     * @remarks Only has an effect together with `curve`.
+     */
+    step: boolean;
+
     /** Complete custom value function. */
     fn: ValueFunction;
   }>;

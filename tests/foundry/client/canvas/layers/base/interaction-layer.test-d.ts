@@ -20,6 +20,12 @@ declare class MyInteractionLayer extends InteractionLayer {
 
 expectTypeOf(MyInteractionLayer.layerOptions.baseClass).toEqualTypeOf<typeof MyInteractionLayer>;
 
+// v14.367: `TOGGLE_PALETTE` became a static getter.
+expectTypeOf(MyInteractionLayer.TOGGLE_PALETTE).toEqualTypeOf<Partial<foundry.applications.ui.SceneControls.Tool>>();
+
+// @ts-expect-error `TOGGLE_PALETTE` is read-only since v14.367.
+MyInteractionLayer.TOGGLE_PALETTE = {};
+
 declare const pointerEvent: foundry.canvas.Canvas.Event.Pointer;
 declare const someUser: User.Implementation;
 const layer = new MyInteractionLayer();

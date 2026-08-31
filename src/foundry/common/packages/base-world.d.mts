@@ -1,5 +1,6 @@
 import type BasePackage from "./base-package.d.mts";
 import type { AnyMutableObject, InexactPartial } from "#utils";
+import type { DataModel } from "#common/abstract/_module.d.mts";
 import type { ReleaseData } from "../config.d.mts";
 
 import World = foundry.packages.World;
@@ -65,7 +66,7 @@ declare class BaseWorld extends BasePackage<BaseWorld.Schema> {
    * - `compatibility.maximum === "1.0.0"` to `undefined`
    * - If `coreVersion` but no `compatibility.verified`, sets both `compatibility.verified` and `.minimum` to `coreVersion`
    */
-  static migrateData(data: AnyMutableObject): AnyMutableObject;
+  static migrateData(data: AnyMutableObject, options?: DataModel.MigrateDataOptions): AnyMutableObject;
 
   static testAvailability(
     data: InexactPartial<PackageManifestData>,

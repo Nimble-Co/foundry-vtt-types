@@ -13,8 +13,13 @@ expectTypeOf(myCanvasEdges.set("foo", someEdge)).toEqualTypeOf<CanvasEdges>();
 expectTypeOf(myCanvasEdges.delete("foo")).toBeBoolean();
 expectTypeOf(myCanvasEdges.clear()).toEqualTypeOf<CanvasEdges>();
 
+expectTypeOf(myCanvasEdges.identifyIntersections()).toEqualTypeOf<void>();
+
 // eslint-disable-next-line @typescript-eslint/no-deprecated
-expectTypeOf(myCanvasEdges.inititalize()).toEqualTypeOf<void>();
+expectTypeOf(myCanvasEdges.initialize()).toEqualTypeOf<void>();
+
+// The `inititalize` typo was renamed to `initialize` in v14.367.
+expectTypeOf(myCanvasEdges).not.toHaveProperty("inititalize");
 // eslint-disable-next-line @typescript-eslint/no-deprecated
 expectTypeOf(myCanvasEdges.refresh()).toEqualTypeOf<void>();
 

@@ -31,6 +31,13 @@ describe("CanvasVisibility tests", () => {
     new CONFIG.Canvas.groups.visibility.groupClass();
   });
 
+  test("v14.367: `#MAXIMUM_VISIBILITY_TEXTURE_SIZE` became `_MAXIMUM_VISIBILITY_TEXTURE_SIZE`", () => {
+    expectTypeOf(CanvasVisibility["_MAXIMUM_VISIBILITY_TEXTURE_SIZE"]).toBeNumber();
+
+    // @ts-expect-error `_MAXIMUM_VISIBILITY_TEXTURE_SIZE` is protected.
+    CanvasVisibility._MAXIMUM_VISIBILITY_TEXTURE_SIZE;
+  });
+
   const myVisibilityGroup = new CONFIG.Canvas.groups.visibility.groupClass();
 
   test("Miscellaneous", () => {

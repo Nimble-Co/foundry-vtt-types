@@ -30,9 +30,13 @@ expectTypeOf(myWall.isOpen).toEqualTypeOf<boolean>();
 expectTypeOf(myWall.prepareBaseData()).toEqualTypeOf<void>();
 expectTypeOf(myWall.getWallCategory()).toEqualTypeOf<WallDocument.WallCategory>();
 expectTypeOf(myWall.initializeEdge()).toEqualTypeOf<void>();
-expectTypeOf(
-  myWall.initializeEdge({ deleted: true, priorLevels: ["a", "b"], changedTypes: new Set(["light", "darkness"]) }),
-).toEqualTypeOf<void>();
+expectTypeOf(myWall.initializeEdge({ deleted: true })).toEqualTypeOf<void>();
+
+// v14.365 removed the `priorLevels` and `changedTypes` options from `initializeEdge`.
+// @ts-expect-error `priorLevels` is not an option of `initializeEdge` since v14.365
+myWall.initializeEdge({ deleted: true, priorLevels: ["a", "b"] });
+// @ts-expect-error `changedTypes` is not an option of `initializeEdge` since v14.365
+myWall.initializeEdge({ deleted: true, changedTypes: new Set(["light", "darkness"]) });
 
 await WallDocument.create(
   {

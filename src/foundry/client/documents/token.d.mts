@@ -1889,6 +1889,27 @@ declare namespace TokenDocument {
 
   interface Dimensions3D extends InexactPartial<foundry.canvas.Canvas.ElevatedPoint & Dimensions> {}
 
+  /**
+   * @remarks The argument type for
+   * {@linkcode TokenDocument.getMaxOccupiedGridSpaceCount | TokenDocument#getMaxOccupiedGridSpaceCount}.
+   *
+   * Foundry writes `Partial<TokenDimensions>`, and its `TokenDimensions` typedef includes `depth`.
+   * {@linkcode TokenDocument.Dimensions | Dimensions} in this repository omits `depth`, so this interface
+   * picks the four keys from {@linkcode TokenDocument.Position | Position} directly.
+   */
+  interface MaxOccupiedGridSpaceCountData extends InexactPartial<
+    Pick<Position, "width" | "height" | "depth" | "shape">
+  > {}
+
+  /**
+   * @remarks The return type of
+   * {@linkcode TokenDocument._inflateVisionModeChange | TokenDocument#_inflateVisionModeChange}. The method
+   * returns an empty object when the vision mode change was not applied.
+   */
+  type InflatedVisionModeChange =
+    | Pick<InitializedData["sight"], "color" | "attenuation" | "brightness" | "saturation" | "contrast">
+    | EmptyObject;
+
   interface ResizeOptions extends InexactPartial<Omit<TokenDocument.Database.UpdateOperation, "updates">> {}
 
   interface MovementWaypoint extends Omit<
@@ -2404,6 +2425,15 @@ declare class TokenDocument extends BaseToken.Internal.CanvasDocument {
    */
   includedInLevel(level: string | Level.Implementation): boolean;
 
+  /**
+   * Is this Token located in the given Level?
+   * @param level - The Level ID or Level document
+   *
+   * @remarks Unlike {@linkcode TokenDocument.includedInLevel | TokenDocument#includedInLevel}, this only tests
+   * the Level the Token is placed on. It does not test the Levels that Level makes visible.
+   */
+  override locatedInLevel(level: string | Level.Implementation): boolean;
+
   protected override _initializeSource(
     data: TokenDocument.CreateData,
     options?: Document.InitializeSourceOptions,
@@ -2573,6 +2603,14 @@ declare class TokenDocument extends BaseToken.Internal.CanvasDocument {
    * @returns The offsets of occupied grid spaces
    */
   getOccupiedGridSpaceOffsets(data?: TokenDocument.Dimensions2D): foundry.grid.BaseGrid.Offset3D[];
+
+  /**
+   * Get the number the grid spaces that this Token can occupy at most with the current or given dimensions.
+   * Returns 0 in gridless grids.
+   * @param data - The dimensions (default: `{}`)
+   * @returns The number the grid spaces that this Token can occupy at most
+   */
+  getMaxOccupiedGridSpaceCount(data?: TokenDocument.MaxOccupiedGridSpaceCountData): number;
 
   /**
    * Add or remove this Token from a Combat encounter.
@@ -2886,6 +2924,19 @@ declare class TokenDocument extends BaseToken.Internal.CanvasDocument {
    * @param phase - The application phase under which changes are to be applied
    */
   applyActiveEffects(phase: string): void;
+
+  /**
+   * Acquire the defaults of a vision mode set by an Active Effect change and create additional overrides from them.
+   * @param modeId - The ID of the vision mode the change set
+   *
+   * @remarks Returns an {@linkcode EmptyObject} if the change was not applied, that is, if
+   * `this.sight.visionMode` does not agree with `modeId`.
+   *
+   * Foundry marks this method `@private`, but it is called from
+   * {@linkcode TokenDocument.applyActiveEffects | TokenDocument#applyActiveEffects}, so a subclass can
+   * usefully override it. This repository declares it `protected`.
+   */
+  protected _inflateVisionModeChange(modeId: string): TokenDocument.InflatedVisionModeChange;
 
   /**
    * Send emulated update data to the Token PlaceableObject

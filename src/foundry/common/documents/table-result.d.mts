@@ -71,7 +71,7 @@ declare abstract class BaseTableResult<
    * Migrations:
    * - Numeric `type`s to their new — since v12 — string values
    */
-  static override migrateData(source: AnyMutableObject): AnyMutableObject;
+  static override migrateData(source: AnyMutableObject, options?: DataModel.MigrateDataOptions): AnyMutableObject;
 
   static override shimData(data: AnyMutableObject, options?: DataModel.ShimDataOptions): AnyMutableObject;
 

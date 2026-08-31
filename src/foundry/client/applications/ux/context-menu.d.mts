@@ -166,9 +166,24 @@ declare class ContextMenu<UsesJQuery extends boolean = true> {
 
   /**
    * Local listeners which apply to each ContextMenu instance which is created.
-   * @param html - The context menu element.
+   * @param menu    - The context menu element.
+   * @param options - The render options which the menu was opened with
+   *                  (default: `{}`)
+   * @remarks v14.365 added the `options` parameter. They are forwarded to
+   * {@link ContextMenu._onClickItem | `ContextMenu#_onClickItem`}.
    */
-  activateListeners(html: HTMLElement): void;
+  // options: not null (parameter default only)
+  activateListeners(menu: HTMLElement, options?: ContextMenu.RenderOptions): void;
+
+  /**
+   * Handle click events on context menu items.
+   * @param event   - The click event
+   * @param options - The render options which the menu was opened with
+   *                  (default: `{}`)
+   * @remarks Was the private `#onClickItem` before v14.365.
+   */
+  // options: not null (parameter default only)
+  protected _onClickItem(event: PointerEvent, options?: ContextMenu.RenderOptions): void;
 
   /**
    * Handle context menu activation.

@@ -39,6 +39,7 @@ expectTypeOf(placeable._original).toEqualTypeOf<FakeLight | undefined>();
 expectTypeOf(placeable.isOwner).toBeBoolean();
 expectTypeOf(placeable.isVisible).toBeBoolean();
 expectTypeOf(placeable.isInteractable).toBeBoolean();
+expectTypeOf(placeable.isFilteredOut).toBeBoolean();
 expectTypeOf(placeable.interactionState).toEqualTypeOf<MouseInteractionManager.INTERACTION_STATES | undefined>();
 expectTypeOf(placeable.bounds).toEqualTypeOf<PIXI.Rectangle>();
 expectTypeOf(placeable.center).toEqualTypeOf<PIXI.Point>();

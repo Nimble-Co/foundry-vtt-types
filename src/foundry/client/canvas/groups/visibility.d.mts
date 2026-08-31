@@ -92,6 +92,14 @@ declare class CanvasVisibility<
   lightingVisibility: CanvasVisibility.LightingVisibility;
 
   /**
+   * The maximum allowable visibility texture size.
+   * @defaultValue `4096`
+   * @internal
+   * @remarks This was `static #MAXIMUM_VISIBILITY_TEXTURE_SIZE` before v14.367.
+   */
+  protected static _MAXIMUM_VISIBILITY_TEXTURE_SIZE: number;
+
+  /**
    * A status flag for whether the group initialization workflow has succeeded.
    */
   get initialized(): boolean;
@@ -117,10 +125,10 @@ declare class CanvasVisibility<
 
   /**
    * Optional overrides for exploration sprite dimensions.
-   * @privateRemarks Only `x`, `y`, `width`, and `height` are ever checked, and this is never even set by core anywhere,
-   * but they type it as a `PIXI.Rectangle` so might as well match.
+   * @privateRemarks Only `x`, `y`, `width`, and `height` are ever read, and core never sets this anywhere. Since
+   * v14.367 Foundry types it as the plain {@linkcode Canvas.Rectangle} interface rather than a `PIXI.Rectangle`.
    */
-  set explorationRect(rect: PIXI.Rectangle | undefined);
+  set explorationRect(rect: Canvas.Rectangle | undefined);
 
   /** @remarks This getter doesn't actually exist, it's only here to correct the type inferred from the setter */
   get explorationRect(): undefined;
