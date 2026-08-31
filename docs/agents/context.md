@@ -49,7 +49,7 @@ Mixing these is the source of a large number of historical type bugs. When in do
 
 A **stored** document is one that has been persisted to the database and therefore carries a non-null `_id`; the repo models this as `X.Stored`. In **v13**, several create paths could produce a **temporary** (in-memory, unsaved, `_id: null`) document — the `temporary: true` create option — and the types expressed this with a `Temporary` type parameter and a `X.TemporaryIf<Temporary>` helper (~234 sites).
 
-**v14 removed the `temporary` create concept entirely**: `DatabaseCreateOperation` (`common/abstract/_types.mjs`) no longer has a `temporary` field, and `createDialog` returns `Promise<Document | null>` — always stored, or null. The `Temporary`/`TemporaryIf` machinery is therefore v13 modeling that the migration removes; see [migration-v14.md](migration-v14.md) Phases 1–2.
+**v14 removed the `temporary` create concept entirely**: `DatabaseCreateOperation` (`common/abstract/_types.mjs`) no longer has a `temporary` field, and `createDialog` returns `Promise<Document | null>` — always stored, or null. The `Temporary`/`TemporaryIf` machinery was therefore v13 modeling, and the migration **removed** it; see [decisions.md ADR-010](decisions.md).
 
 ### `system` field
 
@@ -85,11 +85,16 @@ Foundry is mid-migration from the legacy `Application` (now `ApplicationV1`, in 
 
 In `Document`, `parent` is the parent **Document** (e.g. an embedded `Item`'s parent is the owning `Actor`). In `DataField`, `parent` refers to the parent **field/schema**. Same name, different semantics — read context carefully.
 
-## Foundry v13 → v14 transition (current focus)
+## Foundry version targeting
 
-The package version is `13.346.0` but development is moving to v14. The ground truth installed at `D:\foundrydevelopment\FoundryV14\App\resources\app\` reports `generation: 14, build: 363`. When the Foundry source disagrees with the type in this repo, the Foundry source wins — that is the migration work.
+The package targets **v14** and its version tracks the Foundry build it was verified against (`14.363.x`). Ground truth is the Foundry install at `/mnt/d/foundrydevelopment/FoundryV14/App/resources/app`. **When the Foundry source disagrees with a type in this repo, the Foundry source wins.**
 
-Some areas already updated to v14 still have v13-flavored comments referencing v13 behavior. Treat those comments as suspect and verify against the actual `.mjs` file.
+The migration that brought the repo from v13 to v14 is complete — its record is in [archive/v14-migration/](archive/v14-migration/README.md), and the work deliberately left undone is in [todo.md](todo.md).
+
+Two residues to be aware of:
+
+- **The migration was verified against build 14.363.0.** Later Foundry builds have not been diffed against the type surface.
+- **Some v13-flavoured comments survive** in files that were otherwise updated — including ~210 `@deprecated … until v14` markers whose window has now elapsed (see [todo.md](todo.md) item 1). Treat such comments as suspect and verify against the actual `.mjs` file.
 
 ## How to contribute to this file
 

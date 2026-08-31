@@ -30,11 +30,11 @@ Runs on `push` to `main` or `v14` and on every `pull_request`. Three jobs run in
 2. **lint** — runs `npm run lint`.
 3. **test** — installs Playwright browsers and runs `npm run test-types -- --reporter default --reporter github-actions`. Marked `continue-on-error: true` (informational — the runtime `.test.ts` suite needs a live Foundry instance CI can't provide, so it must not block).
 
-**typecheck** and **lint** are the blocking gates; **test** is advisory. The "exactOptionalPropertyTypes = false" and raw `tsgo` steps catch classes of regression the default config does not — do not remove them (they are a CLAUDE.md-flagged boundary).
+**typecheck** and **lint** are the blocking gates; **test** is advisory. The "exactOptionalPropertyTypes = false" and raw `tsgo` steps catch classes of regression the default config does not — do not remove them (they are a boundary flagged in [CONTEXT.md](../../CONTEXT.md)).
 
 ## Local Foundry source as ground truth
 
-Before editing a type for v14, **read the corresponding `.mjs` file under `D:\foundrydevelopment\FoundryV14\App\resources\app\`**. The mapping is:
+Before editing a type, **read the corresponding `.mjs` file under `/mnt/d/foundrydevelopment/FoundryV14/App/resources/app`**. The mapping is:
 
 | Repo path                               | Foundry path              |
 | --------------------------------------- | ------------------------- |
@@ -59,7 +59,7 @@ Prefer this over web search for any Foundry API question — see the MCP server 
 
 ## Publishing
 
-**This fork does not publish to npm.** The upstream League repo's npm-publish workflows (the `publishPrerelease` job on push to `main`, and the `release.yml` GitHub-release → npm job) were removed here — the fork lacks the `NPM_TOKEN`/`FVTT_NPM_TOKEN` secrets and must not republish the League packages. Consumption is via **git tags** instead: `fvtt-types@github:Fronix/foundry-vtt-types#v14.363.0` (see [migration-v14.md](migration-v14.md) "Branch & merge strategy" for the tag convention). If npm publishing is ever wanted on the fork, re-add a publish workflow with the fork's own package name and tokens.
+**This fork does not publish to npm.** The upstream League repo's npm-publish workflows (the `publishPrerelease` job on push to `main`, and the `release.yml` GitHub-release → npm job) were removed here — the fork lacks the `NPM_TOKEN`/`FVTT_NPM_TOKEN` secrets and must not republish the League packages. Consumption is via **git tags** instead: `fvtt-types@github:Fronix/foundry-vtt-types#v14.363.0` (see [archive/v14-migration/migration-v14.md](archive/v14-migration/migration-v14.md) "Branch & merge strategy" for the tag convention). If npm publishing is ever wanted on the fork, re-add a publish workflow with the fork's own package name and tokens.
 
 ## How to contribute to this file
 

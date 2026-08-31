@@ -119,11 +119,13 @@ Each entry below is a noticed-but-not-confirmed concern. Do not rely on these de
 
 `src/foundry/client/applications/api/category-browser.d.mts:75` — typed as `unknown` with `// TODO: SearchFilter.Callback`. Whether the actual `SearchFilter.Callback` type exists yet is unclear; investigation should grep for it.
 
-### V13 → V14 drift in not-yet-touched files
+### Residual v13 drift in files the migration deprioritised
 
-**Status: suspected (general)**
+**Status: suspected (narrow)**
 
-Any file lacking an explicit v14 review may still be modeling v13 behavior. Until a file is verified against `D:\foundrydevelopment\FoundryV14\App\resources\app\<corresponding>.mjs`, treat its types as potentially stale.
+The v13 → v14 migration is complete to its agreed scope, so this is no longer a blanket warning — most of the tree was source-diffed. It survives for the areas the migration **deliberately** deprioritised as low-consumer-value: `sidebar/` tabs, `settings/` menus, and parts of `canvas/vfx/`. Those files are CI-green and v13-compatible but may lack v14's newer members.
+
+If a member looks wrong in one of those areas, verify against `/mnt/d/foundrydevelopment/FoundryV14/App/resources/app/<corresponding>.mjs` before assuming the type is right. Known-and-deliberate omissions are in [todo.md](todo.md); the per-file verification record is in [archive/v14-migration/](archive/v14-migration/README.md).
 
 ## When to update this file
 

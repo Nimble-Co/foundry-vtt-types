@@ -12,7 +12,7 @@ Ground truth for every decision is the Foundry v14.363.0 source at `/home/fronix
 
 A file is **migrated to v14** only when all three hold:
 
-1. **Source-diffed** — members (order, signatures, additions, removals) compared against the corresponding v14 `.mjs`. Member order matches source (per [conventions.md](conventions.md)).
+1. **Source-diffed** — members (order, signatures, additions, removals) compared against the corresponding v14 `.mjs`. Member order matches source (per [conventions.md](../../conventions.md)).
 2. **CI-green** — `npm run typecheck` (tsgo), `npx tsc --exactOptionalPropertyTypes false`, raw `npx tsgo`, `npm run lint`, `npm run test-types`.
 3. **Type-tested** — a `.test-d.ts` exercises the changed/added surface.
 
@@ -103,5 +103,5 @@ Single source of truth for _status_; the work spans many sessions, so keeping it
 - Check a box only when a file meets all three done-bar criteria; use `[~]` + a note for partial work.
 - **This tracker stays slim** — detail, findings, and deferrals go in phase files. Never grow this file with per-batch prose.
 - Record the v14 source build diffed against if it changes (currently 14.363.0).
-- The global "nothing-dropped" deferral view is reconstructable on demand: `grep -l "Inherited deferrals" docs/agent/migration-v14-phase-*.md`, then read those sections.
+- The global "nothing-dropped" deferral view is reconstructable on demand: `grep -l "Inherited deferrals" docs/agents/migration-v14-phase-*.md`, then read those sections.
 - **When a phase closes (CI-green & committed):** flip its roadmap status, point its Detail link at the archive, and move the phase file's content into [migration-v14-archive.md](migration-v14-archive.md) (lift any still-open inherited deferrals into the _next_ receiving phase file first). Nothing is deleted — archiving is a move.

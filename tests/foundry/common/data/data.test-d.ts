@@ -37,7 +37,7 @@ expectTypeOf(myShape.points).toEqualTypeOf<Array<number | undefined>>();
 /******************************************************************/
 
 // v14 BaseShapeData subclasses. `type` is intentionally not asserted: the per-shape branded `type`
-// literal collapses to `never` across the union (see the branded-choice note in docs/agent/bugs.md).
+// literal collapses to `never` across the union (see the branded-choice note in docs/agents/bugs.md).
 
 declare const rectangle: foundry.data.RectangleShapeData;
 expectTypeOf(rectangle.hole).toEqualTypeOf<boolean>();

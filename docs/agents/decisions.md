@@ -6,7 +6,7 @@ Consult this file when making or evaluating an architectural or design choice �
 
 Format: lightweight ADR — **Context → Decision → Consequences**, dated. Each ADR has a `Recorded:` date (when the decision was written into this file) and may have a `Originated:` note (best-effort estimate of when the decision actually took effect — inferred from the codebase, CONTRIBUTING.md, or `package.json` history; treat as approximate).
 
-All ADRs below were recorded on **2026-05-25** during the initial agent-documentation pass for v14. Future ADRs should carry their actual creation date.
+ADR-001 through ADR-010 were recorded on **2026-05-25** during the initial agent-documentation pass for v14. ADR-011 through ADR-013 were recorded on **2026-08-31**, lifted out of the v14 migration trackers when those were archived. Future ADRs should carry their actual creation date.
 
 ---
 
@@ -122,11 +122,47 @@ All ADRs below were recorded on **2026-05-25** during the initial agent-document
 
 **Recorded:** 2026-05-25. **Originated:** 2026-05-25 (during v14-migration planning).
 
-**Context.** In v13, a create operation could be `temporary: true`, producing an in-memory, unsaved document (`_id: null`). The types modelled this with a `Temporary` type parameter and a `X.TemporaryIf<Temporary>` helper threaded through ~234 sites (`CreateOperation`, `CreateReturn`, `PreCreateOptions`, `BackendCreateOperation`, `CreateDialogReturn`, and the `Document.TemporaryIfForName` dispatcher). Foundry **v14 removed the `temporary` create option entirely** — `DatabaseCreateOperation` (`common/abstract/_types.mjs`) no longer has the field, and `createDialog` returns `Promise<Document | null>` (always stored, or null). The repo's `Temporary` machinery is now stale v13 modeling. See [migration-v14.md](migration-v14.md).
+**Context.** In v13, a create operation could be `temporary: true`, producing an in-memory, unsaved document (`_id: null`). The types modelled this with a `Temporary` type parameter and a `X.TemporaryIf<Temporary>` helper threaded through ~234 sites (`CreateOperation`, `CreateReturn`, `PreCreateOptions`, `BackendCreateOperation`, `CreateDialogReturn`, and the `Document.TemporaryIfForName` dispatcher). Foundry **v14 removed the `temporary` create option entirely** — `DatabaseCreateOperation` (`common/abstract/_types.mjs`) no longer has the field, and `createDialog` returns `Promise<Document | null>` (always stored, or null). The repo's `Temporary` machinery was stale v13 modeling. See [archive/v14-migration/](archive/v14-migration/README.md).
 
-**Decision.** Remove the `Temporary` / `TemporaryIf` concept across the type surface. Creates resolve to `X.Stored`. Done in two steps: the bounded `createDialog`-return slice (migration Phase 1) first, then the full removal rooted in the `common/abstract/document.d.mts` boundary file (Phase 2, under human review).
+**Decision.** Remove the `Temporary` / `TemporaryIf` concept across the type surface. Creates resolve to `X.Stored`. **Done** — in two steps: the bounded `createDialog`-return slice (migration Phase 1) first, then the full removal rooted in the `common/abstract/document.d.mts` boundary file (Phase 2, under human review). Both phases landed CI-green; ~85 files touched.
 
-**Consequences.** This is a **breaking change** for downstream consumers that reference `X.TemporaryIf` or pass a `Temporary` type argument — those references must be dropped or replaced with `X.Stored`. It simplifies the create surface considerably (one fewer type parameter on a large family of helpers). Because it touches the `document.d.mts` boundary file at ~234 sites, it carries real regression risk and is gated behind the Phase 2 human review. Cross-reference: [context.md § Temporary vs Stored document](context.md).
+**Consequences.** This is a **breaking change** for downstream consumers that reference `X.TemporaryIf` or pass a `Temporary` type argument — those references must be dropped or replaced with `X.Stored`. It simplified the create surface considerably (one fewer type parameter on a large family of helpers). Because it touched the `document.d.mts` boundary file at ~234 sites it carried real regression risk, so the second step was gated behind human review. Cross-reference: [context.md § Temporary vs Stored document](context.md).
+
+---
+
+## ADR-011: Keep the deprecated MeasuredTemplate surface intact rather than structurally un-embedding it
+
+**Recorded:** 2026-08-31 (lifted from the migration trackers). **Originated:** 2026-05-28 (migration Phase 7, maintainer-agreed).
+
+**Context.** v14 merges `MeasuredTemplate` into `Region`: it is removed from `ALL_DOCUMENT_TYPES`, un-embedded from `Scene`, and reduced to a deprecated shim whose CRUD delegates to `RegionDocument`. Modelling that structurally is not a local edit — `Document<Name extends ALL_DOCUMENT_TYPES>` would reject `"MeasuredTemplate"`, `parentCollection` would lose `"templates"`, and `PlaceableObject.AnyCanvasDocument` (derived from `Scene.Embedded.Name`) would stop admitting the deprecated placeable, breaking the templates layer, the placeable, and `config.d.mts`. The whole legacy surface nonetheless **still works at runtime through v16**.
+
+**Decision.** Do **not** perform the structural un-embed. Type the full legacy surface and mark it `@deprecated since v14` in prose. The **client-data shapes-barrel unification** is descoped on the same grounds — the client shape classes would shadow the common `BaseShapeData` subclasses and break `RegionDocument#shapes`. Revisit both **near v16**, when Foundry actually removes the shim.
+
+**Consequences.** The types deliberately diverge from v14's document taxonomy in this one place, in the consumer's favour: un-embedding would delete `scene.templates` from the types and break backward-compatible code that still legitimately reads it during the v14→v16 window. New code should extend `RegionDocument`, not `MeasuredTemplate`. The full cascade analysis — including a sketched `DEPRECATED_DOCUMENT_TYPES` approach — is retained in [archive/v14-migration/migration-v14-phase-7.md](archive/v14-migration/migration-v14-phase-7.md) for whoever picks this up at v16. Tracked in [todo.md](todo.md) only insofar as Scene's `background`/`foreground` migration remains.
+
+---
+
+## ADR-012: On a version bump, remove deprecations that reflect runtime reality; keep and reword the ones that are migration aids
+
+**Recorded:** 2026-08-31 (lifted from the migration trackers). **Originated:** 2026-05-28 (migration Phase 8, maintainer-agreed).
+
+**Context.** Targeting v14 raised the question of what to do with ~760 members marked `@deprecated … will be removed in v14`. Treated as one bucket it looked like a large breaking change. Investigation showed the bucket is really two: **(a)** TS-only convenience aliases (chiefly the database-operation renames, `CreateDocumentsOperation` → `CreateOperation`, ~20× per document file) that have no runtime counterpart, and **(b)** members the v14 runtime genuinely dropped or hard-privatised.
+
+**Decision.** Split the pass. **Remove (b)** — verified absent from the v14 source, so keeping them is an accuracy defect. **Keep (a) and reword** the now-false `will be removed in v14` note to `removed in a future version`. Removing (a) would be a pure breaking change with zero accuracy gain.
+
+**Consequences.** The prune landed non-breaking (79 files, +763 / −1270). Generalise the rule to future version bumps: **a deprecation marker is only worth removing when the runtime member is actually gone** — verify against the source before deleting, and treat type-only aliases as migration aids worth their keep. The separate `until v14` marker bucket was left alone; see [todo.md](todo.md) item 1.
+
+---
+
+## ADR-013: Remove the `_onXDocuments` static methods (breaking) once verified absent from the runtime
+
+**Recorded:** 2026-08-31 (lifted from the migration trackers). **Originated:** 2026-07-02 (migration Phase 8, explicit maintainer sign-off).
+
+**Context.** `_onCreateDocuments` / `_onUpdateDocuments` / `_onDeleteDocuments` were static document lifecycle hooks with a large type footprint: 3 base methods, 105 leaf overrides, 104 namespace interfaces, 105 lookup-map entries, and 3 boundary types in `document.d.mts`. A source check found **zero occurrences anywhere in the v14.363.0 runtime** — meeting the [ADR-012](#adr-012-on-a-version-bump-remove-deprecations-that-reflect-runtime-reality-keep-and-reword-the-ones-that-are-migration-aids) category-(b) bar.
+
+**Decision.** Remove the whole family, along with the dead context aliases, the `…ForName` types, and the now-unreachable `Extract` branch of `_RestrictToDataObjects`. Deliberately **preserve** the live aliases `X.Database.DeleteDocumentsOperation` and `UpdateDocumentsOperation` — those still name real types.
+
+**Consequences.** Net 75 files, +6 / −3559; all five CI gates green. **Breaking** for subclass authors calling `super._onCreateDocuments` (etc.), who must move to `_onCreateOperation` / `_onUpdateOperation` / `_onDeleteOperation`. This is the worked example of ADR-012's rule: the size of the diff was not the deciding factor — the absence of the runtime member was.
 
 ---
 
