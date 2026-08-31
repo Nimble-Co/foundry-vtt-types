@@ -24,7 +24,7 @@ If any rule below is enforceable by the linter, prefer making it a lint rule ins
 
 ### Source mirroring
 
-- The directory and file layout of `src/foundry/` mirrors `D:\foundrydevelopment\FoundryV14\App\resources\app\` 1:1. If Foundry moves or renames a file in v14, mirror that movement.
+- The directory and file layout of `src/foundry/` mirrors `/mnt/d/foundrydevelopment/FoundryV14/App/resources/app` 1:1. If Foundry moves or renames a file in v14, mirror that movement.
 - Within a single class declaration, the **order of members should match the order in the Foundry source**. This lets reviewers diff side-by-side. From CONTRIBUTING.md: "the order of declarations should be exactly the same."
 
 ### Namespacing custom types

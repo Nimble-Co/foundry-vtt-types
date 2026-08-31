@@ -10,13 +10,15 @@ This repository is a TypeScript **declaration-only** package: it ships `.d.mts` 
 
 Published as `@league-of-foundry-developers/foundry-vtt-types` (also as `fvtt-types`).
 
-## The single goal right now
+## The single goal
 
-Update this repository so it accurately models **Foundry VTT v14**. The `main` branch currently targets v13 in transition to v14. Type accuracy against the v14 runtime is the only objective; ergonomics and convenience come second.
+Model **Foundry VTT v14** accurately. Type accuracy against the v14 runtime is the objective; ergonomics and convenience come second.
+
+The multi-session v13 → v14 migration that established this is **complete** — see [archive/v14-migration/](archive/v14-migration/README.md) for its record, and [todo.md](todo.md) for the handful of items left undone on purpose. The repo is now in maintenance: keep the types accurate as Foundry ships new builds.
 
 ## Required reading before changing types
 
-1. The matching file in the Foundry source at `D:\foundrydevelopment\FoundryV14\App\resources\app\` — this is the ground truth.
+1. The matching file in the Foundry source at `/mnt/d/foundrydevelopment/FoundryV14/App/resources/app` — this is the ground truth.
    - Client runtime: `client/` (mirrors `src/foundry/client/`)
    - Common (shared server/client) runtime: `common/` (mirrors `src/foundry/common/`)
    - Public static scripts: `public/scripts/` (mirrors `src/foundry/public/scripts/`)

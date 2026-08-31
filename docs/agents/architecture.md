@@ -21,10 +21,10 @@ tests/
   foundry/                # Mirrors `src/foundry/` - one `.test-d.ts` per declaration file where useful
   custom/                 # Tests for the lenient/configured surface
   types/                  # Tests for the utils
-docs/agent/               # This documentation set
+docs/agents/              # This documentation set + skill config; archive/ holds the closed v14 migration
 ```
 
-The hierarchical rule: **the directory tree under `src/foundry/` mirrors the directory tree under `D:\foundrydevelopment\FoundryV14\App\resources\app\`.** A file in the Foundry source at `client/applications/api/dialog.mjs` corresponds to the typings at `src/foundry/client/applications/api/dialog.d.mts`. Diverging from this layout requires a strong reason.
+The hierarchical rule: **the directory tree under `src/foundry/` mirrors the directory tree under `/mnt/d/foundrydevelopment/FoundryV14/App/resources/app`.** A file in the Foundry source at `client/applications/api/dialog.mjs` corresponds to the typings at `src/foundry/client/applications/api/dialog.d.mts`. Diverging from this layout requires a strong reason.
 
 ## Path aliases (TypeScript `imports` map)
 

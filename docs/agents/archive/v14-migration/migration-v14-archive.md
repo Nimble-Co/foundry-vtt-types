@@ -4,7 +4,7 @@
 
 This is the **historical detail for completed v14 migration phases**, moved out of [migration-v14.md](migration-v14.md) so the live tracker stays small enough to load into every agent session without a performance hit. **Nothing here is dead** — it is the per-file checklist, drift survey, commit list, and reusable type-system findings for each phase that has reached the done bar.
 
-This file is intentionally **not** `@`-imported by `CLAUDE.md`/`AGENTS.md`. Read it on demand when you need closed-phase specifics: which commit landed a given change, the exact field rewrites a phase applied, or a reusable gotcha (e.g. the `GridOffsetField` dimensions wart). The **live** roadmap, status, and cross-phase deferrals all live in [migration-v14.md](migration-v14.md) — that file remains the single source of truth for _what is still open_. This one is the record of _what is closed_.
+This file is historical; nothing loads it automatically. Read it on demand when you need closed-phase specifics: which commit landed a given change, the exact field rewrites a phase applied, or a reusable gotcha (e.g. the `GridOffsetField` dimensions wart). The **live** roadmap, status, and cross-phase deferrals all live in [migration-v14.md](migration-v14.md) — that file remains the single source of truth for _what is still open_. This one is the record of _what is closed_.
 
 When a phase closes (CI-green & committed), move its expanded detail here and leave a one-line pointer in the live tracker (see that file's maintenance rules).
 
